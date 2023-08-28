@@ -70,3 +70,12 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Packed Firebase
+/[Aa]ssets/[Ff]irebase/
+
+# Packed GoogleSignIn
+/[Aa]ssets/[Gg]oogle[Ss]ign[Ii]n
+
+# Asset HappyHarvest
+/[Aa]ssets/[Hh]appy[Hh]arvest
