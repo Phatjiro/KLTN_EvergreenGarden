@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "987333857141",
+    "project_id": "evergreengarden-34803",
+    "storage_bucket": "evergreengarden-34803.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:987333857141:android:e7479baf491c274abb4d3c",
+        "android_client_info": {
+          "package_name": "com.iuh.kltn.evergreengarden"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "987333857141-nno404f1m2p570c94ptg1vo0gg1nlp6s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iuh.kltn.evergreengarden",
+            "certificate_hash": "56ee049d8ca922aba3f49a57163b5b1935bec320"
+          }
+        },
+        {
+          "client_id": "987333857141-i5mdf4rsae842joq1gnednru6duo44d8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCO8MgmqnlzrAFOo_-dtm1SHccCQeQPD-A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "987333857141-d0mffi7fh5udh6848aaoqthpgco2ecv0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
