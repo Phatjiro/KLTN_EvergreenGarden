@@ -12,7 +12,7 @@ public class LoginManager : MonoBehaviour
     [SerializeField]
     Button buttonLoginWithGoogle;
 
-    private void Awake()
+    private async void Awake()
     {
         // Ontap button
         buttonLoginWithGoogle.onClick.AddListener(SignInWithGoogle);
@@ -28,7 +28,7 @@ public class LoginManager : MonoBehaviour
         GoogleSignIn.Configuration = configuration;
 
         // Check dependencies
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
+        await FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
         {
             var dependencyStatus = task.Result;
             if (dependencyStatus == DependencyStatus.Available)
