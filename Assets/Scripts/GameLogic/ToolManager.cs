@@ -8,25 +8,29 @@ public class ToolManager : MonoBehaviour
     [SerializeField]
     Button buttonDigging;
     [SerializeField]
-    Button buttonWatered;
+    Button buttonWatering;
+    [SerializeField]
+    Button buttonPlantingGrass;
 
     List<Button> allButtons;
-    int indexDig = 0;
-    int indexWatered = 1;
+    int indexDiging = 0;
+    int indexWatering = 1;
+    int indexPlatingGrass = 2;
 
     private void Awake()
     {
         buttonDigging.onClick.AddListener(ActiveDigging);
-        buttonWatered.onClick.AddListener(ActiveWatering);
+        buttonWatering.onClick.AddListener(ActiveWatering);
+        buttonPlantingGrass.onClick.AddListener(ActivePlatingGrass);
 
-        allButtons = new List<Button>() { buttonDigging, buttonWatered };
+        allButtons = new List<Button>() { buttonDigging, buttonWatering, buttonPlantingGrass };
     }
 
     private void ActiveDigging()
     {
         Debug.Log("Change or disable to digging mode");
         bool isDiggingMode = (FarmAction.currentMode == FarmMode.Digging);
-        ActiveButtonByIndex(indexDig, !isDiggingMode, FarmMode.Digging);
+        ActiveButtonByIndex(indexDiging, !isDiggingMode, FarmMode.Digging);
         EventButtonManager.SetIsClickingButton(false);
     }
 
@@ -34,7 +38,15 @@ public class ToolManager : MonoBehaviour
     {
         Debug.Log("Change or disable to watering mode");
         bool isWateringMode = (FarmAction.currentMode == FarmMode.Watering);
-        ActiveButtonByIndex(indexWatered, !isWateringMode, FarmMode.Watering);
+        ActiveButtonByIndex(indexWatering, !isWateringMode, FarmMode.Watering);
+        EventButtonManager.SetIsClickingButton(false);
+    }
+
+    private void ActivePlatingGrass()
+    {
+        Debug.Log("Change or disable to plating grass");
+        bool isPlatingGrassMode = (FarmAction.currentMode == FarmMode.PlatingGrass);
+        ActiveButtonByIndex(indexPlatingGrass, !isPlatingGrassMode, FarmMode.PlatingGrass);
         EventButtonManager.SetIsClickingButton(false);
     }
 

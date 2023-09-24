@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -5,15 +6,16 @@ public enum FarmMode
 {
     None,
     Digging,
-    Watering
+    Watering,
+    PlatingGrass
 }
 
 public class FarmAction : MonoBehaviour
 {
     [SerializeField]
-    Tilemap tilemap_Ground;
+    Tilemap tilemap_FarmGround;
     [SerializeField]
-    Tilemap Tilemap_FarmGround;
+    Tilemap tilemap_GroundWatered;
     [SerializeField]
     TileBase tileToPlace_groundDigged;
     [SerializeField]
@@ -48,19 +50,42 @@ public class FarmAction : MonoBehaviour
             if (touch.phase == TouchPhase.Began)
             {
                 Vector3 touchWorldPos = Camera.main.ScreenToWorldPoint(touch.position);
-                Vector3Int cellPos = tilemap_Ground.WorldToCell(touchWorldPos);
+                Vector3Int cellPos = tilemap_FarmGround.WorldToCell(touchWorldPos);
 
-                if (currentMode == FarmMode.Digging)
+                // Get cell in other tilemap
+                var cellInFarmGround = tilemap_FarmGround.GetTile(cellPos);
+                var cellInGroundWatered = tilemap_GroundWatered.GetTile(cellPos);
+
+                // SwitchCase to active mode
+                switch (currentMode)
                 {
-                    tilemap_Ground.SetTile(cellPos, tileToPlace_groundDigged);
-                }
-                else if (currentMode == FarmMode.Watering)
-                {
-                    var cell = tilemap_Ground.GetTile(cellPos);
-                    if (cell == tileToPlace_groundDigged)
-                    {
-                        Tilemap_FarmGround.SetTile(cellPos, tileToPlace_groundWatered);
-                    }
+                    case FarmMode.None:
+                        break;
+
+                    case FarmMode.Digging:
+                        tilemap_FarmGround.SetTile(cellPos, tileToPlace_groundDigged);
+                        break;
+
+                    case FarmMode.Watering:
+                        if (cellInFarmGround == tileToPlace_groundDigged)
+                        {
+                            tilemap_GroundWatered.SetTile(cellPos, tileToPlace_groundWatered);
+                        }
+                        break;
+
+                    case FarmMode.PlatingGrass:
+                        if (cellInGroundWatered == tileToPlace_groundWatered)
+                        {
+                            tilemap_GroundWatered.SetTile(cellPos, null);
+                        }
+                        if (cellInFarmGround == tileToPlace_groundDigged)
+                        {
+                            tilemap_FarmGround.SetTile(cellPos, null);
+                        }
+                        break;
+
+                    default:
+                        break;
                 }
             }
         }
