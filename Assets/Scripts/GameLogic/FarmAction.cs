@@ -1,7 +1,9 @@
+using DG.Tweening;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public enum FarmMode
 {
@@ -40,11 +42,18 @@ public class FarmAction : MonoBehaviour
     List<Vector3Int> lstCellPos;
     List<int> lstPlantState;
 
+    [SerializeField]
+    Image imageNotification;
+    [SerializeField]
+    Text textMessageContent;
+
     public static FarmMode currentMode = FarmMode.None;
 
     // Start is called before the first frame update
     void Start()
     {
+        imageNotification.gameObject.SetActive(false);
+
         lstPlantedTime = new List<DateTime>();
         lstCellPos = new List<Vector3Int>();
         lstPlantState = new List<int>();
@@ -117,6 +126,10 @@ public class FarmAction : MonoBehaviour
                         {
                             tilemap_GroundWatered.SetTile(cellPos, tileToPlace_groundWatered);
                         }
+                        else
+                        {
+                            ShowNotification("Please water the dug soil bed", 2);
+                        }
                         break;
 
                     case FarmMode.PlantingGrass:
@@ -138,6 +151,10 @@ public class FarmAction : MonoBehaviour
                             this.lstCellPos.Add(cellPos);
                             this.lstPlantState.Add(0);
                         }
+                        else
+                        {
+                            ShowNotification("Please plant the dug wattered bed", 2);
+                        }
                         break;
 
                     default:
@@ -145,5 +162,16 @@ public class FarmAction : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void ShowNotification(string messContent, int timeShowNotification)
+    {
+        imageNotification.gameObject.SetActive(true);
+        textMessageContent.text = messContent;
+        imageNotification.GetComponent<RectTransform>().DOAnchorPosY(-100, 1);
+        imageNotification.DOFade(1, timeShowNotification).OnComplete(() =>
+        {
+            imageNotification.GetComponent<RectTransform>().DOAnchorPosY(100, 1);
+        });
     }
 }
