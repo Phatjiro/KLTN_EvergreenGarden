@@ -8,13 +8,17 @@ using UnityEngine.UI;
 public class MenuManager : MonoBehaviour
 {
     [SerializeField]
-    Button buttonChangeAccount;
-    [SerializeField]
     Text textHiUser;
 
-    private void Awake()
+    [SerializeField]
+    Button buttonPlay;
+    [SerializeField]
+    Button buttonChangeAccount;
+
+    void Awake()
     {
         // Ontap button
+        buttonPlay.onClick.AddListener(LoadPlaySceneWithLoading);
         buttonChangeAccount.onClick.AddListener(ChangeAccount);
 
         // Get DisplayName of current user to Hi ^^
@@ -24,16 +28,16 @@ public class MenuManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-    public void ChangeAccount()
+    private void ChangeAccount()
     {
         try
         {
@@ -51,5 +55,11 @@ public class MenuManager : MonoBehaviour
         {
             Debug.Log("Error during sign out: " + e.Message);
         }
+    }
+
+    private void LoadPlaySceneWithLoading()
+    {
+        LoadingManager.NEXT_SCENE = "PlayScene";
+        SceneManager.LoadScene("LoadingScene");
     }
 }
