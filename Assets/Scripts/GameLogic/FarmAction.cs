@@ -47,11 +47,17 @@ public class FarmAction : MonoBehaviour
     [SerializeField]
     Text textMessageContent;
 
+    public Map map;
+
     public static FarmMode currentMode = FarmMode.None;
 
     // Start is called before the first frame update
     void Start()
     {
+        map = new Map();
+        map.ReadFileTxt();
+        LoadMap(map);
+
         imageNotification.gameObject.SetActive(false);
 
         lstPlantedTime = new List<DateTime>();
@@ -119,6 +125,11 @@ public class FarmAction : MonoBehaviour
 
                     case FarmMode.Digging:
                         tilemap_FarmGround.SetTile(cellPos, tileToPlace_groundDigged);
+                        CellData cellData = new CellData(cellPos.x, cellPos.y, CellState.Digged);
+                        map.AddCell(cellData);
+                        map.ShowMap();
+                        tilemap_GroundWatered.SetTile(cellPos, tileToPlace_carrot_04);
+                        map.ExportFileTxt();
                         break;
 
                     case FarmMode.Watering:
@@ -174,4 +185,47 @@ public class FarmAction : MonoBehaviour
             imageNotification.GetComponent<RectTransform>().DOAnchorPosY(100, 1);
         });
     }
+
+    private void CellDataToTiseBase(CellData cellData)
+    {
+        TileBase tileToPlace = null;
+        Tilemap tilemap = null;
+        Debug.Log(cellData);
+        switch (cellData.cellState)
+        {
+            case CellState.None:
+                break;
+            case CellState.Ground:
+                break;
+            case CellState.Digged:
+                Debug.Log("Enter digged");
+                tileToPlace = tileToPlace_groundDigged;
+                tilemap = tilemap_FarmGround;
+                ApplyCellDataToTilemap(cellData, tilemap, tileToPlace);
+                break;
+            case CellState.Watered:
+                tileToPlace = tileToPlace_groundWatered;
+                tilemap = tilemap_GroundWatered;
+                ApplyCellDataToTilemap(cellData, tilemap, tileToPlace);
+                break;
+            case CellState.Carrot:
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void ApplyCellDataToTilemap(CellData cellData, Tilemap tilemap, TileBase tileBase)
+    {
+        Vector3Int cellPos = new Vector3Int(cellData.x, cellData.y, 0);
+        tilemap.SetTile(cellPos, tileBase);
+    }
+
+    private void LoadMap(Map map)
+    {
+        for (int i = 0; i < map.GetLength(); i++)
+        {
+            CellDataToTiseBase(map.lstCell[i]);
+        }
+    }    
 }
