@@ -12,6 +12,7 @@ public enum FarmMode
     Watering,
     PlantingGrass,
     PlantingCarrot,
+    Gloving,
 }
 
 public class FarmAction : MonoBehaviour
