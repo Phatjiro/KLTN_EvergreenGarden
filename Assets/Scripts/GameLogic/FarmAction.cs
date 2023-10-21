@@ -129,7 +129,7 @@ public class FarmAction : MonoBehaviour
                         CellData cellData = new CellData(cellPos.x, cellPos.y, CellState.Digged);
                         map.AddCell(cellData);
                         map.ShowMap();
-                        tilemap_GroundWatered.SetTile(cellPos, tileToPlace_carrot_04);
+                        //tilemap_GroundWatered.SetTile(cellPos, tileToPlace_carrot_04);
                         map.ExportFileTxt();
                         break;
 
