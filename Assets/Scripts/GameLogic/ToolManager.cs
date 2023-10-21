@@ -23,6 +23,15 @@ public class ToolManager : MonoBehaviour
     int indexPlatingCarrot = 3;
     int indexGloving = 4;
 
+    List<GameObject> allObjects;
+
+    [SerializeField]
+    GameObject glovesRight;
+    [SerializeField]
+    GameObject glovesLeft;
+    [SerializeField]
+    GameObject shovelAsset;
+
     private void Awake()
     {
         buttonDigging.onClick.AddListener(ActiveDigging);
@@ -31,7 +40,23 @@ public class ToolManager : MonoBehaviour
         buttonPlantingCarrot.onClick.AddListener(ActivePlatingCarrot);
         buttonGloving.onClick.AddListener(ActiveGloving);
 
-        allButtons = new List<Button>() { buttonDigging, buttonWatering, buttonPlantingGrass, buttonPlantingCarrot, buttonGloving };
+        allButtons = new List<Button>() 
+        { 
+            buttonDigging,
+            buttonWatering,
+            buttonPlantingGrass,
+            buttonPlantingCarrot,
+            buttonGloving
+        };
+
+        allObjects = new List<GameObject>()
+        { 
+            shovelAsset,
+            null,
+            null,
+            null,
+            glovesRight,
+        };
     }
 
     private void ActiveDigging()
@@ -80,17 +105,21 @@ public class ToolManager : MonoBehaviour
                 if (isActive == false)
                 {
                     FarmAction.currentMode = FarmMode.None;
+                    allObjects[i].SetActive(false);
                 }
                 else
                 {
                     FarmAction.currentMode = modeActive;
+                    allObjects[i].SetActive(true);
                 }
             }
             else
             {
                 ActiveButton(allButtons[i], false);
+                allObjects[i]?.SetActive(false);
             }
         }
+        glovesLeft.SetActive(glovesRight.activeSelf);
     }
 
     private void ActiveButton(Button btn, bool isActive)
