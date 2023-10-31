@@ -31,6 +31,8 @@ public class ToolManager : MonoBehaviour
     GameObject glovesLeft;
     [SerializeField]
     GameObject shovelAsset;
+    [SerializeField]
+    GameObject wateringCan;
 
     private void Awake()
     {
@@ -52,7 +54,7 @@ public class ToolManager : MonoBehaviour
         allObjects = new List<GameObject>()
         { 
             shovelAsset,
-            null,
+            wateringCan,
             null,
             null,
             glovesRight,
