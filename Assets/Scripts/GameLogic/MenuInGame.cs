@@ -9,11 +9,14 @@ public class MenuInGame : MonoBehaviour
     Button buttonMenu;
     [SerializeField]
     GameObject MenuManager;
+    [SerializeField]
+    Button buttonExit;
 
     private void Awake()
     {
         Debug.Log("KKK");
         buttonMenu.onClick.AddListener(ShowMenuManager);
+        buttonExit.onClick.AddListener(ShowMenuManager);
     }
 
     // Start is called before the first frame update
