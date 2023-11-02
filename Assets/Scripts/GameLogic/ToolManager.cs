@@ -33,6 +33,10 @@ public class ToolManager : MonoBehaviour
     GameObject shovelAsset;
     [SerializeField]
     GameObject wateringCan;
+    [SerializeField]
+    GameObject seedBagGrass;
+    [SerializeField]
+    GameObject seedBagCarrot;
 
     private void Awake()
     {
@@ -55,8 +59,8 @@ public class ToolManager : MonoBehaviour
         { 
             shovelAsset,
             wateringCan,
-            null,
-            null,
+            seedBagGrass,
+            seedBagCarrot,
             glovesRight,
         };
     }
