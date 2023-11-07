@@ -1,8 +1,10 @@
-using System.Collections;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+[Serializable]
 public class Map
 {
     public List<CellData> lstCell;
@@ -86,7 +88,7 @@ public class Map
                     int x = int.Parse(lstLineElement[0]);
                     int y = int.Parse(lstLineElement[1]);
                     CellState state = CellData.StringToCellState(lstLineElement[2]);
-                    CellData data = new CellData(x,y,state);
+                    CellData data = new CellData(x, y, state);
                     lstCell.Add(data);
                 }
             }
@@ -100,5 +102,10 @@ public class Map
     public int GetLength()
     {
         return lstCell.Count;
+    }
+
+    public override string ToString()
+    {
+        return JsonConvert.SerializeObject(this);
     }
 }

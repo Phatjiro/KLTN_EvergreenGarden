@@ -14,7 +14,6 @@ public class MenuInGame : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("KKK");
         buttonMenu.onClick.AddListener(ShowMenuManager);
         buttonExit.onClick.AddListener(ShowMenuManager);
     }
@@ -33,7 +32,6 @@ public class MenuInGame : MonoBehaviour
 
     public void ShowMenuManager()
     {
-        Debug.Log("AA");
         MenuManager.SetActive(!MenuManager.activeSelf);
     }
 }

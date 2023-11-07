@@ -11,6 +11,7 @@ public enum CellState {
     Carrot
 }
 
+[Serializable]
 public class CellData
 {
     public int x;
@@ -31,10 +32,9 @@ public class CellData
         this.cellState = state;
     }
 
-    override
-    public string ToString()
+    public override string ToString()
     {
-        return $"{x},{y},{cellState}";
+        return $"{x},{y},{cellState} ";
     }
 
     public static CellState StringToCellState(string state)

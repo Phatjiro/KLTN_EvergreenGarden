@@ -1,8 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Newtonsoft.Json;
+using System;
 
-public class User : MonoBehaviour
+[Serializable]
+public class User
 {
     public int id;
     public string characterName;
@@ -10,7 +10,7 @@ public class User : MonoBehaviour
     public int diamond;
 
     public User()
-    { 
+    {
         id = -1;
         characterName = "Default name";
         gold = 0;
@@ -25,21 +25,8 @@ public class User : MonoBehaviour
         this.diamond = diamond;
     }
 
-    override
-    public string ToString()
+    public override string ToString()
     {
-        return $"{id},{characterName},{gold},{diamond}";
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        return JsonConvert.SerializeObject(this);
     }
 }

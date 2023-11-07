@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Tilemap
+  - Carrot4
   layers:
   - Default
   - TransparentFX

@@ -1,9 +1,15 @@
 using DG.Tweening;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
+
+public interface ReadDataCallback
+{
+    public void OnReadDataCompleted(string data);
+}
 
 public enum FarmMode
 {
@@ -15,7 +21,7 @@ public enum FarmMode
     Gloving,
 }
 
-public class FarmAction : MonoBehaviour
+public class FarmAction : MonoBehaviour, ReadDataCallback
 {
     [SerializeField]
     Tilemap tilemap_FarmGround;
@@ -48,6 +54,12 @@ public class FarmAction : MonoBehaviour
     [SerializeField]
     Text textMessageContent;
 
+    // Manager Firebase Database
+    [SerializeField]
+    FirebaseReadData firebaseReadData;
+    [SerializeField]
+    FirebaseWriteData firebaseWriteData;
+
     public Map map;
 
     public static FarmMode currentMode = FarmMode.None;
@@ -56,14 +68,22 @@ public class FarmAction : MonoBehaviour
     void Start()
     {
         map = new Map();
-        map.ReadFileTxt();
-        LoadMap(map);
+        //map.ReadFileTxt();
+        firebaseReadData.ReadData("Map", this);
 
         imageNotification.gameObject.SetActive(false);
 
         lstPlantedTime = new List<DateTime>();
         lstCellPos = new List<Vector3Int>();
         lstPlantState = new List<int>();
+
+        InvokeRepeating("UpdateMapDB", 1, 10);
+    }
+
+    private void UpdateMapDB()
+    {
+        //string data = map.ToString();
+        //firebaseWriteData.WriteData("Map", data);
     }
 
     // Update is called once per frame
@@ -74,6 +94,7 @@ public class FarmAction : MonoBehaviour
 
         if (this.lstPlantedTime != null && this.lstPlantedTime.Count > 0)
         {
+            List<int> lstIndexRemove = new List<int>();
             int index = 0;
             foreach (var t in this.lstPlantedTime)
             {
@@ -89,14 +110,17 @@ public class FarmAction : MonoBehaviour
                 else if (secondAfterPlantedTime >= 30)
                 {
                     tilemap_Planting.SetTile(lstCellPos[index], tileToPlace_carrot_04);
-
+                    lstIndexRemove.Insert(0, index);
                 }
                 index++;
             }
-            
+            foreach (int id in lstIndexRemove)
+            {
+                this.lstPlantedTime.RemoveAt(id);
+                this.lstCellPos.RemoveAt(id);
+            }
         }
         
-
         if (currentMode == FarmMode.None)
         {
             return;
@@ -128,8 +152,6 @@ public class FarmAction : MonoBehaviour
                         tilemap_FarmGround.SetTile(cellPos, tileToPlace_groundDigged);
                         CellData cellData = new CellData(cellPos.x, cellPos.y, CellState.Digged);
                         map.AddCell(cellData);
-                        map.ShowMap();
-                        //tilemap_GroundWatered.SetTile(cellPos, tileToPlace_carrot_04);
                         map.ExportFileTxt();
                         break;
 
@@ -169,6 +191,14 @@ public class FarmAction : MonoBehaviour
                         }
                         break;
 
+                    case FarmMode.Gloving:
+                        if (cellInPlanting == tileToPlace_carrot_04)
+                        {
+                            tilemap_Planting.SetTile(cellPos, null);
+                            tilemap_GroundWatered.SetTile(cellPos, null);
+                        }
+                        break;
+
                     default:
                         break;
                 }
@@ -191,7 +221,6 @@ public class FarmAction : MonoBehaviour
     {
         TileBase tileToPlace = null;
         Tilemap tilemap = null;
-        Debug.Log(cellData);
         switch (cellData.cellState)
         {
             case CellState.None:
@@ -199,9 +228,9 @@ public class FarmAction : MonoBehaviour
             case CellState.Ground:
                 break;
             case CellState.Digged:
-                Debug.Log("Enter digged");
                 tileToPlace = tileToPlace_groundDigged;
                 tilemap = tilemap_FarmGround;
+                Vector3Int cellPos = new Vector3Int(cellData.x, cellData.y, 0);
                 ApplyCellDataToTilemap(cellData, tilemap, tileToPlace);
                 break;
             case CellState.Watered:
@@ -224,9 +253,29 @@ public class FarmAction : MonoBehaviour
 
     private void LoadMap(Map map)
     {
+        Debug.Log("Map length: " + map.GetLength());
         for (int i = 0; i < map.GetLength(); i++)
         {
             CellDataToTiseBase(map.lstCell[i]);
         }
-    }    
+    }
+
+    public void SaveData()
+    { 
+        
+    }
+
+    public void OnReadDataCompleted(string data)
+    {
+        Debug.Log("Data day ne: " + data);
+        Debug.Log("Convert data to object");
+        Map mapTest = new Map();
+        Debug.Log(mapTest.ToString());
+        map = JsonConvert.DeserializeObject<Map>(data);
+        Debug.Log("Json2Object successful");
+        Debug.Log("map: " + map.GetType());
+        map.ShowMap();
+        LoadMap(map);
+        Debug.Log("Load and show map successful");
+    }
 }
