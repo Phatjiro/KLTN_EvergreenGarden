@@ -1,7 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public enum CellState { 
     None,
@@ -34,7 +31,7 @@ public class CellData
 
     public override string ToString()
     {
-        return $"{x},{y},{cellState} ";
+        return $"{x},{y},{cellState}";
     }
 
     public static CellState StringToCellState(string state)

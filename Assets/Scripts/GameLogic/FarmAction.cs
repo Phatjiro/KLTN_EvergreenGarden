@@ -60,6 +60,8 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
     [SerializeField]
     FirebaseWriteData firebaseWriteData;
 
+    User user;
+
     public Map map;
 
     public static FarmMode currentMode = FarmMode.None;
@@ -67,9 +69,18 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
     // Start is called before the first frame update
     void Start()
     {
+        //Load map
         map = new Map();
         //map.ReadFileTxt();
         firebaseReadData.ReadData("Map", this);
+
+        //Load user information
+        this.user = new User();
+        //Load user.....
+        //.......
+        //Loaded user
+        //........
+
 
         imageNotification.gameObject.SetActive(false);
 
@@ -196,6 +207,10 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                         {
                             tilemap_Planting.SetTile(cellPos, null);
                             tilemap_GroundWatered.SetTile(cellPos, null);
+                            ItemInBag carrotAdd = new ItemInBag(ItemType.Carrot, 1);
+                            this.user.userBag.AddItem(carrotAdd);
+                            this.user.ShowBag();
+                            this.user.UpdateBagUI(ItemType.Carrot, user.userBag.GetQuantityOfType(ItemType.Carrot));
                         }
                         break;
 

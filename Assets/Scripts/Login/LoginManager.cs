@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class LoginManager : MonoBehaviour
 {
+    // Firebase
     FirebaseAuth auth;
 
     // Sign in google
@@ -20,6 +21,8 @@ public class LoginManager : MonoBehaviour
     [SerializeField]
     InputField inputFieldPassword;
     [SerializeField]
+    Button buttonLoginWithEmailPassword;
+    [SerializeField]
     Text textNotifyLoginEmailPassword;
 
     // Register email password
@@ -30,37 +33,41 @@ public class LoginManager : MonoBehaviour
     [SerializeField]
     InputField inputFieldConfirmPassword;
     [SerializeField]
+    Button buttonRegisterEmailPassword;
+    [SerializeField]
     Text textNotifyRegisterEmailPassword;
 
-    // Login
+    // Login form
     [SerializeField]
     GameObject loginForm;
     [SerializeField]
     Button buttonLoadRegisterForm;
     [SerializeField]
-    Button buttonLogin;
-    [SerializeField]
     Button buttonForgotPassword;
 
-    // Register
+    // Register form
     [SerializeField]
     GameObject registerForm;
     [SerializeField]
     Button buttonLoadLoginForm;
-    [SerializeField]
-    Button buttonRegister;
 
+    // Firebase write database
+    FirebaseWriteData firebaseWriteData;
 
     private void Awake()
     {
         // Ontap button
         buttonLoadRegisterForm.onClick.AddListener(SwitchLoginRegisterForm);
         buttonLoadLoginForm.onClick.AddListener(SwitchLoginRegisterForm);
-        buttonLogin.onClick.AddListener(SignInWithEmailPassword);
-        buttonRegister.onClick.AddListener(RegisterWithEmailPassword);
-        buttonLoginWithGoogle.onClick.AddListener(SignInWithGoogle);
+
+        buttonLoginWithEmailPassword.onClick.AddListener(SignInWithEmailPassword);
+        buttonRegisterEmailPassword.onClick.AddListener(RegisterWithEmailPassword);
         buttonForgotPassword.onClick.AddListener(ForgetPassword);
 
+        buttonLoginWithGoogle.onClick.AddListener(SignInWithGoogle);
+
+        firebaseWriteData = new FirebaseWriteData();
+        
         // Init GoogleSignInConfiguration
         GoogleSignInConfiguration configuration = new GoogleSignInConfiguration
         {
@@ -72,7 +79,7 @@ public class LoginManager : MonoBehaviour
         GoogleSignIn.Configuration = configuration;
 
         // Check dependencies
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(async task =>
+        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
         {
             DependencyStatus dependencyStatus = task.Result;
             if (dependencyStatus == DependencyStatus.Available)
@@ -83,10 +90,8 @@ public class LoginManager : MonoBehaviour
                 // Check if user login already
                 if (auth.CurrentUser != null)
                 {
-                    Debug.Log("User: " + auth.CurrentUser.DisplayName + " already login - Load MenuScene");
-
+                    Debug.Log("User: " + auth.CurrentUser.DisplayName + " already login -> Load MenuScene");
                     SceneManager.LoadScene("MenuScene");
-                    Debug.Log("Loaded scene");
                 }
             }
             else
@@ -103,13 +108,13 @@ public class LoginManager : MonoBehaviour
             if (task.IsFaulted)
             {
                 // Login failed
-                Debug.Log("GoogleSignIn failed: " + task.Exception);
+                Debug.Log("GoogleSignIn - was encountered an error: " + task.Exception);
                 return;
             }
             if (task.IsCanceled)
             {
                 // Login canceled
-                Debug.Log("GoogleSignIn canceled");
+                Debug.Log("GoogleSignIn - was canceled");
                 return;
             }
             else
@@ -122,6 +127,7 @@ public class LoginManager : MonoBehaviour
             }
         });
     }
+
     public void SignInWithFirebase(string idToken)
     {
         // Sign in to Firebase with Google Token Id
@@ -135,15 +141,23 @@ public class LoginManager : MonoBehaviour
             }
             if (task.IsCanceled)
             {
-                Debug.Log("Firebase sign in - was canceled");
+                Debug.Log("SignInWithFirebase - was canceled");
                 return;
             }
             if (task.IsCompleted)
             {
                 // Firebase sign in successful
                 FirebaseUser user = task.Result;
-                Debug.Log("Firebase user sign in: " + user.DisplayName);
-                Debug.Log("Load to MenuScene");
+
+                if (user.Metadata.CreationTimestamp == auth.CurrentUser.Metadata.LastSignInTimestamp)
+                {
+                    // Create new User in game when complete register
+                    User newUser = new User(user.UserId, user.DisplayName, 100, 50);
+                    firebaseWriteData.WriteData("Users/" + newUser.id, newUser.ToString());
+                    Debug.Log("User created successfully");
+                }
+
+                Debug.Log("Firebase user sign in: " + user.DisplayName + " -> Load to MenuScene");
                 SceneManager.LoadScene("MenuScene");
             }
         });
@@ -160,8 +174,8 @@ public class LoginManager : MonoBehaviour
     {
         string email = inputFieldEmail.text;
         string password = inputFieldPassword.text;
-        Debug.Log("Your email/password: " + email + "/" + password);
 
+        // Check empty field
         if (email == "" || password == "")
         {
             Debug.Log("Email and password can not empty");
@@ -169,6 +183,7 @@ public class LoginManager : MonoBehaviour
             return;
         }
 
+        // Check valid email
         if (!IsEmailValid(email))
         {
             Debug.Log("Your email is invalid");
@@ -176,6 +191,7 @@ public class LoginManager : MonoBehaviour
             return;
         }
 
+        // Sign in with email password
         auth.SignInWithEmailAndPasswordAsync(email, password).ContinueWith(task =>
         {
             if (task.IsFaulted)
@@ -187,14 +203,14 @@ public class LoginManager : MonoBehaviour
             if (task.IsCanceled)
             {
                 Debug.Log("SignInWithEmailPassword - was canceled");
+                textNotifyLoginEmailPassword.text = "Sign in task was canceled";
                 return;
             }
             if (task.IsCompleted)
             {
                 // Email password sign in successful
                 FirebaseUser user = task.Result.User;
-                Debug.Log("Firebase user sign in: " + user.DisplayName);
-                Debug.Log("Load to MenuScene");  
+                Debug.Log("Email password user sign in: " + user.DisplayName + " -> Load to MenuScene");
                 SceneManager.LoadScene("MenuScene");
             }
         });
@@ -218,18 +234,29 @@ public class LoginManager : MonoBehaviour
         string password = inputFieldRegisterPassword.text;
         string confirmPassword = inputFieldConfirmPassword.text;
 
+        // Check empty field
         if (email == "" || password == "" || confirmPassword == "")
         {
-            Debug.Log("Email or password or confirmPassword empty");
-            textNotifyLoginEmailPassword.text = "Email, password and confirm password can not empty";
+            textNotifyRegisterEmailPassword.text = "Email, password and confirm password can not empty";
             return;
         }
 
-        if (password.Length < 6)
+        // Check valid email
+        if (!IsEmailValid(email))
         {
-            textNotifyLoginEmailPassword.text = "Your password must be longer than 6 characters";
+            Debug.Log("Your email is invalid");
+            textNotifyRegisterEmailPassword.text = "Your email is invalid";
+            return;
         }
 
+        // Check length password
+        if (password.Length < 6)
+        {
+            textNotifyRegisterEmailPassword.text = "Your password must be longer than 6 characters";
+            return;
+        }
+
+        // Check confirm password
         if (!CheckConfirmPassword(password, confirmPassword))
         {
             Debug.Log("Password do not match");
@@ -237,23 +264,31 @@ public class LoginManager : MonoBehaviour
             return;
         }
 
+        // Register with email password
         auth.CreateUserWithEmailAndPasswordAsync(email, password).ContinueWith(task =>
         {
             if (task.IsFaulted)
             {
                 Debug.Log("RegisterWithEmailPassword - was encountered an error: " + task.Exception);
+                textNotifyRegisterEmailPassword.text = "An error occurred while creating the user";
                 return;
             }
             if (task.IsCanceled)
             {
                 Debug.Log("RegisterWithEmailPassword - was canceled");
+                textNotifyRegisterEmailPassword.text = "Create user task was canceled";
                 return;
             }
             if (task.IsCompleted)
             {
                 FirebaseUser user = task.Result.User;
-                Debug.Log("User registered successfully: " + user.Email);
-                Debug.Log("Load to MenuScene");
+                Debug.Log("Email password user sign in: " + user.DisplayName + " -> Load to MenuScene");
+
+                // Create new User in game when complete register
+                User newUser = new User(user.UserId, user.DisplayName, 100, 50);
+                firebaseWriteData.WriteData("Users/" + newUser.id, newUser.ToString());
+                Debug.Log("User created successfully");
+
                 SceneManager.LoadScene("MenuScene");
             }
         });
@@ -291,7 +326,8 @@ public class LoginManager : MonoBehaviour
             }
             if (task.IsCanceled)
             {
-                Debug.Log("Send email reset password canceled");
+                Debug.Log("Password reset email was canceled");
+                textNotifyLoginEmailPassword.text = "Password reset email was canceled";
                 return;
             }
             if (task.IsCompleted)

@@ -21,8 +21,11 @@ public class MenuManager : MonoBehaviour
         buttonPlay.onClick.AddListener(LoadPlaySceneWithLoading);
         buttonChangeAccount.onClick.AddListener(ChangeAccount);
 
-        // Get DisplayName of current user to Hi ^^
-        textHiUser.text = "Hi, " + FirebaseAuth.DefaultInstance.CurrentUser.DisplayName;
+        if (FirebaseAuth.DefaultInstance.CurrentUser != null)
+        {
+            // Get DisplayName of current user to Hi ^^
+            textHiUser.text = "Hi, " + FirebaseAuth.DefaultInstance.CurrentUser.DisplayName;
+        }
     }
 
     // Start is called before the first frame update

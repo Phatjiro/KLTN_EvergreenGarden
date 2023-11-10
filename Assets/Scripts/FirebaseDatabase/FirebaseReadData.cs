@@ -6,14 +6,14 @@ public class FirebaseReadData : MonoBehaviour
 {
     DatabaseReference reference;
 
-    public void ReadData(string table, ReadDataCallback callback)
+    public void ReadData(string path, ReadDataCallback callback)
     {
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
         {
             FirebaseApp app = FirebaseApp.DefaultInstance;
             reference = FirebaseDatabase.DefaultInstance.RootReference;
 
-            reference.Child(table).GetValueAsync().ContinueWith(task =>
+            reference.Child(path).GetValueAsync().ContinueWith(task =>
             {
                 if (task.IsFaulted)
                 {
