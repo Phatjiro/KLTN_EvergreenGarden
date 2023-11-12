@@ -106,10 +106,15 @@ public class ShopManager : MonoBehaviour
 
     public void MoveSellBag(int x)
     {
-        Vector3 currentPosition = bagObject.transform.position;
+        /*Vector3 currentPosition = bagObject.transform.position;
         Debug.Log(bagObject.transform.position.x);
         currentPosition.x += x;
         bagObject.transform.position = currentPosition;
-        Debug.Log(bagObject.transform.position.x);
+        Debug.Log(bagObject.transform.position.x);*/
+
+        Vector2 currentPos = bagObject.GetComponent<RectTransform>().anchoredPosition;
+        Debug.Log("CurrentPos: " + currentPos);
+        currentPos.x += x;
+        bagObject.GetComponent<RectTransform>().anchoredPosition = currentPos;
     }
 }

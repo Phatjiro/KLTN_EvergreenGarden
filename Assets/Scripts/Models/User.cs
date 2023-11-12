@@ -11,6 +11,7 @@ public class User
     public int diamond;
 
     public Bag userBag;
+    public Map userMap;
 
     public User()
     {
@@ -20,6 +21,7 @@ public class User
         diamond = 0;
 
         userBag = new Bag();
+        userMap = new Map();
     }
 
     public User(string id, string characterName, int gold, int diamond)
@@ -30,6 +32,16 @@ public class User
         this.diamond = diamond;
     }
 
+    public User(string id, string characterName, int gold, int diamond, Bag userBag, Map userMap)
+    {
+        this.id = id;
+        this.characterName = characterName;
+        this.gold = gold;
+        this.diamond = diamond;
+        this.userBag = userBag;
+        this.userMap = userMap;
+    }
+
     public void ShowBag()
     {
         foreach (var item in userBag.lstItem)
@@ -38,11 +50,20 @@ public class User
         }
     }
 
-    public void UpdateBagUI(ItemType itemType, int quantity)
+    public void AddItemToBag(ItemType itemType, int quantity)
     {
-        Sprite iconSprite = ItemInformationManager._instance.GetIcon(itemType);
-        if (BagUIManager._instance != null)
-            BagUIManager._instance.UpdateItemAt(0, iconSprite, quantity);
+        BagItemLoader loader = BagItemLoader.instance;
+        if (loader != null)
+        {
+            loader.AddItemToLst(new ItemInBag(itemType, quantity));
+        }
+    }
+
+    public void AddItemToBag(ItemInBag itemInBag)
+    {
+        if (this.userBag == null)
+            this.userBag = new Bag();
+        this.userBag.AddItem(itemInBag);
     }
 
     public override string ToString()

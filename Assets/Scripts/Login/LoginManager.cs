@@ -66,8 +66,8 @@ public class LoginManager : MonoBehaviour
 
         buttonLoginWithGoogle.onClick.AddListener(SignInWithGoogle);
 
-        firebaseWriteData = new FirebaseWriteData();
-        
+        firebaseWriteData = FindObjectOfType<FirebaseWriteData>();
+
         // Init GoogleSignInConfiguration
         GoogleSignInConfiguration configuration = new GoogleSignInConfiguration
         {
@@ -152,7 +152,9 @@ public class LoginManager : MonoBehaviour
                 if (user.Metadata.CreationTimestamp == auth.CurrentUser.Metadata.LastSignInTimestamp)
                 {
                     // Create new User in game when complete register
-                    User newUser = new User(user.UserId, user.DisplayName, 100, 50);
+                    Bag userBag = new Bag();
+                    Map userMap = new Map();
+                    User newUser = new User(user.UserId, user.DisplayName, 100, 50, userBag, userMap);
                     firebaseWriteData.WriteData("Users/" + newUser.id, newUser.ToString());
                     Debug.Log("User created successfully");
                 }
@@ -269,8 +271,24 @@ public class LoginManager : MonoBehaviour
         {
             if (task.IsFaulted)
             {
-                Debug.Log("RegisterWithEmailPassword - was encountered an error: " + task.Exception);
-                textNotifyRegisterEmailPassword.text = "An error occurred while creating the user";
+                FirebaseException exception = task.Exception.GetBaseException() as FirebaseException;
+                if (exception != null)
+                {
+                    Debug.Log("CODEEEEEEEEEEEEEEEE ---------: " + exception.ErrorCode);
+                    // ErrorCode: 8 is "Email Exist"
+                    if (exception.ErrorCode == 8)
+                    {
+                        Debug.Log("Email already exits");
+                        textNotifyRegisterEmailPassword.text = "Email already used for account creation";
+                        Debug.Log("ABC da den day choi boi");
+                    }
+                    else
+                    {
+                        Debug.Log("Error: " + exception);
+                        textNotifyRegisterEmailPassword.text = "Register was encountered an error";
+                    }
+                }
+                
                 return;
             }
             if (task.IsCanceled)
@@ -285,7 +303,9 @@ public class LoginManager : MonoBehaviour
                 Debug.Log("Email password user sign in: " + user.DisplayName + " -> Load to MenuScene");
 
                 // Create new User in game when complete register
-                User newUser = new User(user.UserId, user.DisplayName, 100, 50);
+                Bag userBag = new Bag();
+                Map userMap = new Map();
+                User newUser = new User(user.UserId, user.DisplayName, 100, 50, userBag, userMap);
                 firebaseWriteData.WriteData("Users/" + newUser.id, newUser.ToString());
                 Debug.Log("User created successfully");
 

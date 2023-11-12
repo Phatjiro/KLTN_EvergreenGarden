@@ -2,11 +2,17 @@ using Firebase;
 using Firebase.Database;
 using UnityEngine;
 
+public enum ReadDataType
+{
+    Map,
+    User
+}
+
 public class FirebaseReadData : MonoBehaviour
 {
     DatabaseReference reference;
 
-    public void ReadData(string path, ReadDataCallback callback)
+    public void ReadData(string path, ReadDataCallback callback, ReadDataType dataType)
     {
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
         {
@@ -27,7 +33,18 @@ public class FirebaseReadData : MonoBehaviour
                         string json = snapshot.Value.ToString();
                         if (callback != null)
                         {
-                            callback.OnReadDataCompleted(json);
+                            switch (dataType)
+                            {
+                                case ReadDataType.Map:
+                                    callback.OnReadDataMapCompleted(json);
+                                    break;
+                                case ReadDataType.User:
+                                    Debug.Log("Call data user");
+                                    callback.OnReadDataUserCompleted(json);
+                                    break;
+                                default:
+                                    break;
+                            }
                         }
                     }
                     else

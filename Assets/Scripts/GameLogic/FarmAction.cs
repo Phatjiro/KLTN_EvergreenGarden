@@ -1,4 +1,5 @@
 using DG.Tweening;
+using Firebase.Auth;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,8 @@ using UnityEngine.UI;
 
 public interface ReadDataCallback
 {
-    public void OnReadDataCompleted(string data);
+    public void OnReadDataMapCompleted(string data);
+    public void OnReadDataUserCompleted(string data); 
 }
 
 public enum FarmMode
@@ -19,6 +21,7 @@ public enum FarmMode
     PlantingGrass,
     PlantingCarrot,
     Gloving,
+    PlantingCorn,
 }
 
 public class FarmAction : MonoBehaviour, ReadDataCallback
@@ -60,41 +63,82 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
     [SerializeField]
     FirebaseWriteData firebaseWriteData;
 
-    User user;
-
-    public Map map;
+    FirebaseUser firebaseUser;
+    User userInGame;
 
     public static FarmMode currentMode = FarmMode.None;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
-        //Load map
-        map = new Map();
-        //map.ReadFileTxt();
-        firebaseReadData.ReadData("Map", this);
-
-        //Load user information
-        this.user = new User();
-        //Load user.....
-        //.......
-        //Loaded user
-        //........
-
-
-        imageNotification.gameObject.SetActive(false);
-
+        // Init Map and User
+        userInGame = new User();
         lstPlantedTime = new List<DateTime>();
         lstCellPos = new List<Vector3Int>();
         lstPlantState = new List<int>();
 
-        InvokeRepeating("UpdateMapDB", 1, 10);
+#if !UNITY_EDITOR
+        // Get user already login
+        firebaseUser = FirebaseAuth.DefaultInstance.CurrentUser;
+        Debug.Log(firebaseUser.UserId + " - " + firebaseUser.DisplayName);
+#endif
     }
 
-    private void UpdateMapDB()
+    // Start is called before the first frame update
+    void Start()
     {
-        //string data = map.ToString();
-        //firebaseWriteData.WriteData("Map", data);
+        if (firebaseReadData == null)
+        {
+            Debug.LogError("FirebaseReadData component not found!");
+        }
+        if (firebaseWriteData == null)
+        {
+            Debug.LogError("FirebaseWriteData component not found!");
+        }
+        else
+        {
+            if (firebaseUser != null)
+            {
+                // Read data map
+                firebaseReadData.ReadData("Map", this, ReadDataType.Map);
+
+                // Read data user
+                firebaseReadData.ReadData("Users/" + firebaseUser.UserId, this, ReadDataType.User);
+            }
+        }
+
+        imageNotification.gameObject.SetActive(false);
+        InvokeRepeating("UpdateMapDataToFirebase", 1, 10);
+    }
+
+    private void UpdateMapDataToFirebase()
+    {
+        Debug.Log("Update map");
+        firebaseWriteData.WriteData("Users/" + userInGame.id, userInGame.ToString());
+    }
+
+    private void AddPlantTime(DateTime currentDateTime)
+    {
+        if (lstPlantedTime == null)
+        { 
+            lstPlantedTime = new List<DateTime>();
+        }
+        lstPlantedTime.Add(currentDateTime);
+    }
+    private void AddCellPos(Vector3Int cellPos)
+    {
+        if (lstCellPos == null)
+        {
+            lstCellPos = new List<Vector3Int>();
+        }
+        lstCellPos.Add(cellPos);
+    }
+    private void AddPlantState(int plants)
+    {
+        if (lstPlantState == null)
+        {
+            lstPlantState= new List<int>();
+        }
+        lstPlantState.Add(plants);
     }
 
     // Update is called once per frame
@@ -162,14 +206,14 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                     case FarmMode.Digging:
                         tilemap_FarmGround.SetTile(cellPos, tileToPlace_groundDigged);
                         CellData cellData = new CellData(cellPos.x, cellPos.y, CellState.Digged);
-                        map.AddCell(cellData);
-                        map.ExportFileTxt();
+                        userInGame.userMap.AddCell(cellData);
                         break;
 
                     case FarmMode.Watering:
                         if (cellInFarmGround == tileToPlace_groundDigged)
                         {
                             tilemap_GroundWatered.SetTile(cellPos, tileToPlace_groundWatered);
+                            userInGame.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Watered));
                         }
                         else
                         {
@@ -192,9 +236,9 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                         if (cellInGroundWatered == tileToPlace_groundWatered)
                         {
                             tilemap_Planting.SetTile(cellPos, tileToPlace_carrot_01);
-                            lstPlantedTime.Add(DateTime.Now);
-                            this.lstCellPos.Add(cellPos);
-                            this.lstPlantState.Add(0);
+                            AddPlantTime(DateTime.Now);
+                            AddCellPos(cellPos);
+                            AddPlantState(0);
                         }
                         else
                         {
@@ -208,9 +252,12 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                             tilemap_Planting.SetTile(cellPos, null);
                             tilemap_GroundWatered.SetTile(cellPos, null);
                             ItemInBag carrotAdd = new ItemInBag(ItemType.Carrot, 1);
-                            this.user.userBag.AddItem(carrotAdd);
-                            this.user.ShowBag();
-                            this.user.UpdateBagUI(ItemType.Carrot, user.userBag.GetQuantityOfType(ItemType.Carrot));
+
+                            // Add item to user bag
+                            userInGame.AddItemToBag(carrotAdd);
+
+                            userInGame.ShowBag();
+                            userInGame.AddItemToBag(ItemType.Carrot, 1);
                         }
                         break;
 
@@ -232,65 +279,15 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
         });
     }
 
-    private void CellDataToTiseBase(CellData cellData)
+    public void OnReadDataMapCompleted(string data)
     {
-        TileBase tileToPlace = null;
-        Tilemap tilemap = null;
-        switch (cellData.cellState)
-        {
-            case CellState.None:
-                break;
-            case CellState.Ground:
-                break;
-            case CellState.Digged:
-                tileToPlace = tileToPlace_groundDigged;
-                tilemap = tilemap_FarmGround;
-                Vector3Int cellPos = new Vector3Int(cellData.x, cellData.y, 0);
-                ApplyCellDataToTilemap(cellData, tilemap, tileToPlace);
-                break;
-            case CellState.Watered:
-                tileToPlace = tileToPlace_groundWatered;
-                tilemap = tilemap_GroundWatered;
-                ApplyCellDataToTilemap(cellData, tilemap, tileToPlace);
-                break;
-            case CellState.Carrot:
-                break;
-            default:
-                break;
-        }
+        return;
     }
 
-    private void ApplyCellDataToTilemap(CellData cellData, Tilemap tilemap, TileBase tileBase)
+    public void OnReadDataUserCompleted(string data)
     {
-        Vector3Int cellPos = new Vector3Int(cellData.x, cellData.y, 0);
-        tilemap.SetTile(cellPos, tileBase);
-    }
-
-    private void LoadMap(Map map)
-    {
-        Debug.Log("Map length: " + map.GetLength());
-        for (int i = 0; i < map.GetLength(); i++)
-        {
-            CellDataToTiseBase(map.lstCell[i]);
-        }
-    }
-
-    public void SaveData()
-    { 
-        
-    }
-
-    public void OnReadDataCompleted(string data)
-    {
-        Debug.Log("Data day ne: " + data);
-        Debug.Log("Convert data to object");
-        Map mapTest = new Map();
-        Debug.Log(mapTest.ToString());
-        map = JsonConvert.DeserializeObject<Map>(data);
-        Debug.Log("Json2Object successful");
-        Debug.Log("map: " + map.GetType());
-        map.ShowMap();
-        LoadMap(map);
-        Debug.Log("Load and show map successful");
+        Debug.Log("User data: " + data);
+        userInGame = JsonConvert.DeserializeObject<User>(data);
+        Debug.Log("Load user successful: " + userInGame.ToString());
     }
 }
