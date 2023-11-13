@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Tilemap
   - Shop
+  - Audio
   layers:
   - Default
   - TransparentFX

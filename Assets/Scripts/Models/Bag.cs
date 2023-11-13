@@ -15,17 +15,18 @@ public class Bag
         this.lstItem = lstItem;
     }
 
-    public void AddItem(ItemInBag item) 
+    public void AddItem(ItemInBag item, int quantity) 
     {
         if (lstItem == null) lstItem = new List<ItemInBag>();
         for (int i = 0; i < lstItem.Count; i++)
         {
             if (lstItem[i].type == item.type)
             {
-                lstItem[i].quantity += 1;
+                lstItem[i].quantity += quantity;
                 return;
             }
         }
+        item.quantity = quantity;
         lstItem.Add(item);
         return;
     }

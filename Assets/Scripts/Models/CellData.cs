@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 
 public enum CellState { 
@@ -5,7 +6,8 @@ public enum CellState {
     Ground,
     Digged,
     Watered,
-    Carrot
+    Carrot1, Carrot2, Carrot3, Carrot4,
+    Corn1, Corn2, Corn3, Corn4
 }
 
 [Serializable]
@@ -14,24 +16,34 @@ public class CellData
     public int x;
     public int y;
     public CellState cellState;
+    public DateTime dateTime;
 
     public CellData()
     { 
         this.x = 0;
         this.y = 0;
         this.cellState = CellState.None;
+        dateTime = DateTime.Now;
     }
 
-    public CellData(int x, int y, CellState state)
+    public CellData(int x, int y, CellState state, DateTime dateTime)
     { 
         this.x = x;
         this.y = y;
         this.cellState = state;
+        this.dateTime = dateTime;
+    }
+    public CellData(int x, int y, CellState state)
+    {
+        this.x = x;
+        this.y = y;
+        this.cellState = state;
+        this.dateTime = DateTime.Now;
     }
 
     public override string ToString()
     {
-        return $"{x},{y},{cellState}";
+        return JsonConvert.SerializeObject(this);
     }
 
     public static CellState StringToCellState(string state)

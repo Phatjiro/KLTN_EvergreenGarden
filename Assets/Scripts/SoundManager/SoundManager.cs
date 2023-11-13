@@ -12,6 +12,8 @@ public class SoundButton : MonoBehaviour
     [SerializeField]
     Image imageVolumeOff;
 
+    static string SOUND_PREF_KEY = "SoundStatus";
+
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -20,29 +22,53 @@ public class SoundButton : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        m_AudioSource.Play();
-        imageVolumeOff.enabled = false;
+        int soundStatus = PlayerPrefs.GetInt(SOUND_PREF_KEY, 1);
+
+        if (soundStatus == 0)
+        {
+            TurnOffAudio();
+            imageVolumeOff.enabled = true;
+            imageVolumeOn.enabled = false;
+        }
+        else
+        {
+            TurnOnAudio();
+            imageVolumeOff.enabled = false;
+            imageVolumeOn.enabled = true;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void SwitchVolumeState()
     {
-        if (m_AudioSource.isPlaying)
+        if (PlayerPrefs.GetInt(SOUND_PREF_KEY, 1) == 1)
         {
-            m_AudioSource.Stop();
+            TurnOffAudio();
             imageVolumeOn.enabled = false;
             imageVolumeOff.enabled = true;
+            PlayerPrefs.SetInt(SOUND_PREF_KEY, 0);
         }
         else
         {
-            m_AudioSource.Play();
+            TurnOnAudio();
             imageVolumeOff.enabled = false;
             imageVolumeOn.enabled = true;
+            PlayerPrefs.SetInt(SOUND_PREF_KEY, 1);
         }
+    }
+
+    public void TurnOffAudio()
+    {
+        m_AudioSource.Stop();
+    }
+
+    public void TurnOnAudio()
+    {
+        m_AudioSource.Play();
     }
 }

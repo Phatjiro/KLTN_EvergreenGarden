@@ -50,7 +50,7 @@ public class User
         }
     }
 
-    public void AddItemToBag(ItemType itemType, int quantity)
+    private void AddItemToBagListToShow(ItemType itemType, int quantity)
     {
         BagItemLoader loader = BagItemLoader.instance;
         if (loader != null)
@@ -59,11 +59,12 @@ public class User
         }
     }
 
-    public void AddItemToBag(ItemInBag itemInBag)
+    public void AddItemToBag(ItemInBag itemInBag, int quantity)
     {
         if (this.userBag == null)
             this.userBag = new Bag();
-        this.userBag.AddItem(itemInBag);
+        this.userBag.AddItem(itemInBag, quantity);
+        AddItemToBagListToShow(itemInBag.type, quantity);
     }
 
     public override string ToString()

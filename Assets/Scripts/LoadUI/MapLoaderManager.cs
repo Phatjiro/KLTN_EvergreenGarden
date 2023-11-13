@@ -84,7 +84,7 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
                 tilemap = tilemap_GroundWatered;
                 ApplyCellDataToTilemap(cellData, tilemap, tileToPlace);
                 break;
-            case CellState.Carrot:
+            case CellState.Carrot1:
                 break;
             default:
                 break;
