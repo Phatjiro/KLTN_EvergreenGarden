@@ -15,23 +15,11 @@ public class MenuManager : MonoBehaviour
     [SerializeField]
     Button buttonChangeAccount;
 
-    SoundButton soundButton;
-
-    [SerializeField]
-    Button buttonVolume;
-    [SerializeField]
-    Image imageVolumeOn;
-    [SerializeField]
-    Image imageVolumeOff;
-
     void Awake()
     {
         // Ontap button
         buttonPlay.onClick.AddListener(LoadPlaySceneWithLoading);
         buttonChangeAccount.onClick.AddListener(ChangeAccount);
-        buttonVolume.onClick.AddListener(SwitchVolumeState);
-
-        soundButton = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundButton>();
 
         if (FirebaseAuth.DefaultInstance.CurrentUser != null)
         {
@@ -76,23 +64,5 @@ public class MenuManager : MonoBehaviour
     {
         LoadingManager.NEXT_SCENE = "PlayScene";
         SceneManager.LoadScene("LoadingScene");
-    }
-
-    public void SwitchVolumeState()
-    {
-        if (PlayerPrefs.GetInt("SoundStatus") == 1)
-        {
-            soundButton.TurnOffAudio();
-            imageVolumeOn.enabled = false;
-            imageVolumeOff.enabled = true;
-            PlayerPrefs.SetInt("SoundStatus", 0);
-        }
-        else
-        {
-            soundButton.TurnOnAudio();
-            imageVolumeOff.enabled = false;
-            imageVolumeOn.enabled = true;
-            PlayerPrefs.SetInt("SoundStatus", 1);
-        }   
     }
 }
