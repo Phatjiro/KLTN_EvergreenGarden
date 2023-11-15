@@ -20,6 +20,8 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
     FirebaseUser firebaseUser;
     [SerializeField]
     FirebaseReadData firebaseReadData;
+    [SerializeField]
+    FirebaseWriteData firebaseWriteData;
 
     public User userInGame;
 
@@ -63,21 +65,15 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
 
     public void OnReadDataUserCompleted(string data)
     {
-        Debug.Log("Read User data");
         userInGame = JsonConvert.DeserializeObject<User>(data);
-        Debug.Log("1");
         textGold.text = userInGame.gold.ToString();
-        Debug.Log("2");
         textDiamond.text = userInGame.diamond.ToString();
-        Debug.Log("3");
 
         this.GetComponent<UnityMainThreadDispatcher>().Enqueue(() =>
         {
             textMeshProCharacterName.text = userInGame.characterName;
-            Debug.Log("char name: " + userInGame.characterName);
             if (userInGame.characterName == "")
             {
-                Debug.Log("4");
                 wizardCharacterName.SetActive(true);
             }
             isLoadedUser = true;
@@ -93,7 +89,6 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
     {
         this.userInGame.characterName = name;
         textMeshProCharacterName.text = name;
+        firebaseWriteData.WriteData("Users/" + userInGame.id, userInGame.ToString());
     }
-
-   
 }
