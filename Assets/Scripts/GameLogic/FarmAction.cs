@@ -71,7 +71,6 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
     List<TileBase> tileBaseCorn;
 
     List<PlantTimeInformation> lstPlantedTime;
-    List<int> lstPlantState;
 
     [SerializeField]
     Image imageNotification;
@@ -94,7 +93,6 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
         // Init Map and User
         userInGame = new User();
         lstPlantedTime = new List<PlantTimeInformation>();
-        lstPlantState = new List<int>();
 
 #if !UNITY_EDITOR
         // Get user already login
@@ -133,6 +131,8 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
 
     private void UpdateMapDataToFirebase()
     {
+        if (!MapLoaderManager.isLoadedMap)
+            return;
         Debug.Log("Update map");
         firebaseWriteData.WriteData("Users/" + userInGame.id, userInGame.ToString());
     }
@@ -337,16 +337,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
         userInGame.ShowBag();
     }
 
-    private void ShowNotification(string messContent, int timeShowNotification)
-    {
-        imageNotification.gameObject.SetActive(true);
-        textMessageContent.text = messContent;
-        imageNotification.GetComponent<RectTransform>().DOAnchorPosY(-100, 1);
-        imageNotification.DOFade(1, timeShowNotification).OnComplete(() =>
-        {
-            imageNotification.GetComponent<RectTransform>().DOAnchorPosY(100, 1);
-        });
-    }
+    
 
     public void OnReadDataMapCompleted(string data)
     {
@@ -358,5 +349,12 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
         Debug.Log("User data: " + data);
         userInGame = JsonConvert.DeserializeObject<User>(data);
         Debug.Log("Load user successful: " + userInGame.ToString());
+
+    }
+
+    private void ShowNotification(string mess, int time)
+    {
+        if (NotificationManager.instance == null) return;
+        NotificationManager.instance.ShowNotification(mess, time);
     }
 }

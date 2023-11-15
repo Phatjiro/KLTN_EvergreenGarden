@@ -7,7 +7,8 @@ public class EventButtonManager : MonoBehaviour
     private static bool isClickingButton = false;
 
     public static void SetIsClickingButton(bool isClicking)
-    { 
+    {
+        Debug.Log("Set is clicking: " + isClicking);
         isClickingButton = isClicking;
     }
 

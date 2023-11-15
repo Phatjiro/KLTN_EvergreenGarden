@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class CharacterActionController : MonoBehaviour
 {
+    public static bool isAllowToMove = true;
     public float speed = 5f; // Speed of character
 
     private Vector3 targetPosition; // Target position
@@ -25,6 +26,7 @@ public class CharacterActionController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!isAllowToMove) return;
         // Left mouse
         if (Input.GetMouseButton(0))
         {

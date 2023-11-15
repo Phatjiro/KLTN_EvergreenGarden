@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class MapLoaderManager : MonoBehaviour, ReadDataCallback
 {
+    public static bool isLoadedMap = false;
     FirebaseUser firebaseUser;
 
     [SerializeField]
@@ -111,5 +112,6 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
         User userInGame = JsonConvert.DeserializeObject<User>(data);
         userMap = userInGame.userMap;
         LoadMap(userMap);
+        isLoadedMap = true;
     }
 }
