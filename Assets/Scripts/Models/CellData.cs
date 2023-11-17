@@ -13,10 +13,10 @@ public enum CellState {
 [Serializable]
 public class CellData
 {
-    public int x;
-    public int y;
-    public CellState cellState;
-    public DateTime dateTime;
+    public int x { get; set; }
+    public int y { get; set; }
+    public CellState cellState { get; set; }
+    public DateTime dateTime { get; set; }
 
     public CellData()
     { 

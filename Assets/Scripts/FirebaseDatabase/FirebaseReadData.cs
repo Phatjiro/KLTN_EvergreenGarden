@@ -5,7 +5,8 @@ using UnityEngine;
 public enum ReadDataType
 {
     Map,
-    User
+    User,
+    Animal
 }
 
 public class FirebaseReadData : MonoBehaviour
@@ -41,6 +42,10 @@ public class FirebaseReadData : MonoBehaviour
                                 case ReadDataType.User:
                                     Debug.Log("Call data user");
                                     callback.OnReadDataUserCompleted(json);
+                                    break;
+                                case ReadDataType.Animal:
+                                    Debug.Log("Call data Animal");
+                                    callback.OnReadDataAnimalCompleted(json);
                                     break;
                                 default:
                                     break;

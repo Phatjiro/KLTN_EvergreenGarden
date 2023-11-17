@@ -60,4 +60,9 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
     {
         return;
     }
+
+    public void OnReadDataAnimalCompleted(string data)
+    {
+        
+    }
 }

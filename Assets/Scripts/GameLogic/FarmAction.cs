@@ -12,6 +12,8 @@ public interface ReadDataCallback
 {
     public void OnReadDataMapCompleted(string data);
     public void OnReadDataUserCompleted(string data); 
+
+    public void OnReadDataAnimalCompleted(String data);
 }
 
 public enum FarmMode
@@ -127,13 +129,13 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
         }
 
         imageNotification.gameObject.SetActive(false);
-        InvokeRepeating("UpdateMapDataToFirebase", 1, 10);
+        InvokeRepeating("UpdateMapDataToFirebase", 20, 10);
         InvokeRepeating("GrowPlant", 0, 1);
     }
 
     private void UpdateMapDataToFirebase()
     {
-        Debug.Log("Update map");
+        /*Debug.Log("Update map");*/
         firebaseWriteData.WriteData("Users/" + userInGame.id, userInGame.ToString());
     }
 
@@ -358,5 +360,10 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
         Debug.Log("User data: " + data);
         userInGame = JsonConvert.DeserializeObject<User>(data);
         Debug.Log("Load user successful: " + userInGame.ToString());
+    }
+
+    public void OnReadDataAnimalCompleted(string data)
+    {
+        
     }
 }

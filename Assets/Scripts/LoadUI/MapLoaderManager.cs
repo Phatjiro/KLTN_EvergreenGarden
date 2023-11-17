@@ -112,4 +112,9 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
         userMap = userInGame.userMap;
         LoadMap(userMap);
     }
+
+    public void OnReadDataAnimalCompleted(string data)
+    {
+       
+    }
 }

@@ -10,6 +10,7 @@ public class FirebaseWriteData : MonoBehaviour
     {
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
         {
+            Debug.Log("Write data to:" + path + "    " + dataToWrite);
             FirebaseApp app = FirebaseApp.DefaultInstance;
             reference = FirebaseDatabase.DefaultInstance.RootReference;
             reference.Child(path).SetValueAsync(dataToWrite);

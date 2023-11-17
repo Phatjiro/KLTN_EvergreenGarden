@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class Bag
 {
-    public List<ItemInBag> lstItem;
+    public List<ItemInBag> lstItem { get; set; }
 
     public Bag() 
     {
