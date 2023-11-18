@@ -12,7 +12,7 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
     [SerializeField]
     FirebaseReadData firebaseReadData;
 
-    Map userMap;
+    public Map userMap;
 
     [SerializeField]
     Tilemap tilemap_FarmGround;
@@ -29,7 +29,6 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
     private void Awake()
     {
         firebaseUser = FirebaseAuth.DefaultInstance.CurrentUser;
-        userMap = new Map();
     }
 
     // Start is called before the first frame update
@@ -37,8 +36,8 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
     {
         if (firebaseUser != null)
         {
-            firebaseReadData.ReadData("Users/" + firebaseUser.UserId, this, ReadDataType.User);
-            FirebaseDatabase.DefaultInstance.GetReference("Users/" + firebaseUser.UserId).ValueChanged += OnDataChanged;
+            firebaseReadData.ReadData("Maps/" + firebaseUser.UserId, this, ReadDataType.Map);
+            FirebaseDatabase.DefaultInstance.GetReference("Maps/" + firebaseUser.UserId).ValueChanged += OnDataChanged;
         }
     }
 
@@ -55,7 +54,7 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
             Debug.LogError(args.DatabaseError.Message);
             return;
         }
-        firebaseReadData.ReadData("Users/" + firebaseUser.UserId, this, ReadDataType.User);
+        firebaseReadData.ReadData("Maps/" + firebaseUser.UserId, this, ReadDataType.Map);
     }
 
     private void ApplyCellDataToTilemap(CellData cellData, Tilemap tilemap, TileBase tileBase)
@@ -103,15 +102,14 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
 
     public void OnReadDataMapCompleted(string data)
     {
-        return;
+        Debug.Log("MapLoader Data: " + data);
+        userMap = JsonConvert.DeserializeObject<Map>(data);
+        LoadMap(userMap);
+        isLoadedMap = true;
     }
 
     public void OnReadDataUserCompleted(string data)
     {
-        Debug.Log("MapLoader Data: " + data);
-        User userInGame = JsonConvert.DeserializeObject<User>(data);
-        userMap = userInGame.userMap;
-        LoadMap(userMap);
-        isLoadedMap = true;
+        return;
     }
 }

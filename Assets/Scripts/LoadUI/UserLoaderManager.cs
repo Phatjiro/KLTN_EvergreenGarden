@@ -2,6 +2,7 @@ using Firebase.Auth;
 using Firebase.Database;
 using Newtonsoft.Json;
 using PimDeWitte.UnityMainThreadDispatcher;
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,7 +18,7 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
     [SerializeField]
     TextMeshPro textMeshProCharacterName;
 
-    FirebaseUser firebaseUser;
+    public FirebaseUser firebaseUser;
     [SerializeField]
     FirebaseReadData firebaseReadData;
     [SerializeField]
@@ -28,6 +29,7 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
     [SerializeField]
     GameObject wizardCharacterName;
 
+    Boolean isLoadFirstTime = true;
 
     private void Awake()
     {
@@ -55,8 +57,10 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
 
     public void OnDataChanged(object sender, ValueChangedEventArgs args)
     {
+        Debug.Log("An taooooooooooo");
         if (args.DatabaseError != null)
         {
+            Debug.Log("An chuoiiiiiiiiiiiii");
             Debug.LogError(args.DatabaseError.Message);
             return;
         }
@@ -69,6 +73,17 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
         textGold.text = userInGame.gold.ToString();
         textDiamond.text = userInGame.diamond.ToString();
 
+        if (isLoadFirstTime)
+        {
+            isLoadFirstTime = false;
+            BagItemLoader loader = BagItemLoader.instance;
+            if (loader != null)
+            {
+                Debug.Log("Vao load UI Bag");
+                loader.SetLstItem(userInGame.userBag.lstItem);
+            }
+        }
+
         this.GetComponent<UnityMainThreadDispatcher>().Enqueue(() =>
         {
             textMeshProCharacterName.text = userInGame.characterName;
@@ -78,6 +93,7 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
             }
             isLoadedUser = true;
         });
+        Debug.Log("An cammmmmmmmm");
     }
 
     public void OnReadDataMapCompleted(string data)

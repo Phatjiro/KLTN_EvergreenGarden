@@ -8,11 +8,11 @@ public class FirebaseWriteData : MonoBehaviour
 
     public void WriteData(string path, string dataToWrite)
     {
-        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
-        {
-            FirebaseApp app = FirebaseApp.DefaultInstance;
-            reference = FirebaseDatabase.DefaultInstance.RootReference;
-            reference.Child(path).SetValueAsync(dataToWrite);
-        });
+        //FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
+        //{
+        FirebaseApp app = FirebaseApp.DefaultInstance;
+        reference = FirebaseDatabase.DefaultInstance.RootReference;
+        reference.Child(path).SetValueAsync(dataToWrite);
+        //});
     }
 }

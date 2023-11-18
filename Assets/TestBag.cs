@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BagCanvasManager : MonoBehaviour
+public class TestBag : MonoBehaviour
 {
-    public static BagCanvasManager _instance;
+    public static TestBag _instance;
 
     [SerializeField]
     Transform itemContainer;

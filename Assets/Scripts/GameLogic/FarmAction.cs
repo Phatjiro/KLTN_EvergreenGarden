@@ -1,6 +1,3 @@
-using DG.Tweening;
-using Firebase.Auth;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -83,22 +80,25 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
     [SerializeField]
     FirebaseWriteData firebaseWriteData;
 
-    FirebaseUser firebaseUser;
-    User userInGame;
+    [SerializeField]
+    UserLoaderManager userLoaderManager;
+
+    [SerializeField]
+    MapLoaderManager mapLoaderManager;
 
     public static FarmMode currentMode = FarmMode.None;
 
     private void Awake()
     {
         // Init Map and User
-        userInGame = new User();
+        //userInGame = new User();
         lstPlantedTime = new List<PlantTimeInformation>();
 
-#if !UNITY_EDITOR
-        // Get user already login
-        firebaseUser = FirebaseAuth.DefaultInstance.CurrentUser;
-        Debug.Log(firebaseUser.UserId + " - " + firebaseUser.DisplayName);
-#endif
+//#if !UNITY_EDITOR
+//        // Get user already login
+//        firebaseUser = FirebaseAuth.DefaultInstance.CurrentUser;
+//        Debug.Log(firebaseUser.UserId + " - " + firebaseUser.DisplayName);
+//#endif
     }
 
     // Start is called before the first frame update
@@ -114,14 +114,14 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
         }
         else
         {
-            if (firebaseUser != null)
-            {
-                // Read data map
-                firebaseReadData.ReadData("Map", this, ReadDataType.Map);
+            //if (userLoaderManager.firebaseUser != null)
+            //{
+            //    // Read data map
+            //    firebaseReadData.ReadData("Map", this, ReadDataType.Map);
 
-                // Read data user
-                firebaseReadData.ReadData("Users/" + firebaseUser.UserId, this, ReadDataType.User);
-            }
+            //    // Read data user
+            //    firebaseReadData.ReadData("Users/" + firebaseUser.UserId, this, ReadDataType.User);
+            //}
         }
 
         imageNotification.gameObject.SetActive(false);
@@ -134,7 +134,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
         if (!MapLoaderManager.isLoadedMap)
             return;
         Debug.Log("Update map");
-        firebaseWriteData.WriteData("Users/" + userInGame.id, userInGame.ToString());
+        firebaseWriteData.WriteData("Maps/" + userLoaderManager.userInGame.id, mapLoaderManager.userMap.ToString());
     }
 
     private void AddPlantTime(DateTime currentDateTime, ItemType itemType, Vector3Int cellPos, DateTime nextGrowTime)
@@ -256,14 +256,14 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                             Debug.Log("Digging at: " + cellPos);
                             allTileMap.tilemap_Farmable.SetTile(cellPos, tileToPlace_groundDigged);
                             CellData cellData = new CellData(cellPos.x, cellPos.y, CellState.Digged);
-                            userInGame.userMap.AddCell(cellData);
+                            mapLoaderManager.userMap.AddCell(cellData);
                         }
                         break;
                     case FarmMode.Watering:
                         if (allTileMap.tilemap_Farmable.GetTile(cellPos) == tileToPlace_groundDigged)
                         {
                             allTileMap.tilemap_GroundWatered.SetTile(cellPos, tileToPlace_groundWatered);
-                            userInGame.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Watered));
+                            mapLoaderManager.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Watered));
                         }
                         else
                         {
@@ -288,7 +288,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                             allTileMap.tilemap_Planting.SetTile(cellPos, tilebaseCarrot[0]);
                             Debug.Log("Set tile carrot: " + cellPos);
                             AddPlantTime(DateTime.Now, ItemType.Carrot, cellPos, DateTime.Now.AddSeconds(10));
-                            userInGame.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Carrot1));
+                            mapLoaderManager.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Carrot1));
                         }
                         else
                         {
@@ -301,7 +301,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                         {
                             allTileMap.tilemap_Planting.SetTile(cellPos, tileBaseCorn[0]);
                             AddPlantTime(DateTime.Now, ItemType.Corn, cellPos, DateTime.Now.AddSeconds(10));
-                            userInGame.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Corn1));
+                            mapLoaderManager.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Corn1));
                         }
                         else
                         {
@@ -333,11 +333,11 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
         ItemInBag item = new ItemInBag(itemType, quantity);
 
         // Add item to user bag
-        userInGame.AddItemToBag(item, quantity);
-        userInGame.ShowBag();
+        userLoaderManager.userInGame.AddItemToBag(item, quantity);
+        userLoaderManager.userInGame.ShowBag();
     }
 
-    
+
 
     public void OnReadDataMapCompleted(string data)
     {
@@ -346,10 +346,10 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
 
     public void OnReadDataUserCompleted(string data)
     {
-        Debug.Log("User data: " + data);
-        userInGame = JsonConvert.DeserializeObject<User>(data);
-        Debug.Log("Load user successful: " + userInGame.ToString());
-
+        //Debug.Log("User data: " + data);
+        //userInGame = JsonConvert.DeserializeObject<User>(data);
+        //Debug.Log("Load user successful: " + userInGame.ToString());
+        return;
     }
 
     private void ShowNotification(string mess, int time)

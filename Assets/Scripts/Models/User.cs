@@ -11,7 +11,6 @@ public class User
     public int diamond;
 
     public Bag userBag;
-    public Map userMap;
 
     public User()
     {
@@ -21,7 +20,6 @@ public class User
         diamond = 0;
 
         userBag = new Bag();
-        userMap = new Map();
     }
 
     public User(string id, string characterName, int gold, int diamond)
@@ -32,14 +30,13 @@ public class User
         this.diamond = diamond;
     }
 
-    public User(string id, string characterName, int gold, int diamond, Bag userBag, Map userMap)
+    public User(string id, string characterName, int gold, int diamond, Bag userBag)
     {
         this.id = id;
         this.characterName = characterName;
         this.gold = gold;
         this.diamond = diamond;
         this.userBag = userBag;
-        this.userMap = userMap;
     }
 
     public void ShowBag()

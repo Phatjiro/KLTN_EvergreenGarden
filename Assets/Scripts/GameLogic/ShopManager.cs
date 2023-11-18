@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -25,6 +22,9 @@ public class ShopManager : MonoBehaviour
     [SerializeField]
     Button buttonWizardSell;
 
+    [SerializeField]
+    GameObject seedShopObject;
+
     private void Awake()
     {
         buttonWizardPurchase.onClick.AddListener(ActiveShop);
@@ -36,7 +36,6 @@ public class ShopManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
     }
 
     // Update is called once per frame
@@ -65,7 +64,7 @@ public class ShopManager : MonoBehaviour
 
     public void ActiveWizard()
     {
-        if (shopObject.activeSelf != true && bagObject.activeSelf != true)
+        if (shopObject.activeSelf != true && bagObject.activeSelf != true && seedShopObject.activeSelf != true)
         {
             wizardShop.SetActive(true);
         }

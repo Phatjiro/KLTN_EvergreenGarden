@@ -52,6 +52,7 @@ public class LoginManager : MonoBehaviour
     Button buttonLoadLoginForm;
 
     // Firebase write database
+    [SerializeField]
     FirebaseWriteData firebaseWriteData;
 
     private void Awake()
@@ -65,8 +66,6 @@ public class LoginManager : MonoBehaviour
         buttonForgotPassword.onClick.AddListener(ForgetPassword);
 
         buttonLoginWithGoogle.onClick.AddListener(SignInWithGoogle);
-
-        firebaseWriteData = FindObjectOfType<FirebaseWriteData>();
 
         // Init GoogleSignInConfiguration
         GoogleSignInConfiguration configuration = new GoogleSignInConfiguration
@@ -154,8 +153,9 @@ public class LoginManager : MonoBehaviour
                     // Create new User in game when complete register
                     Bag userBag = new Bag();
                     Map userMap = new Map();
-                    User newUser = new User(user.UserId, user.DisplayName, 100, 50, userBag, userMap);
+                    User newUser = new User(user.UserId, "", 100, 50, userBag);
                     firebaseWriteData.WriteData("Users/" + newUser.id, newUser.ToString());
+                    firebaseWriteData.WriteData("Maps/" + newUser.id, userMap.ToString());
                     Debug.Log("User created successfully");
                 }
 
@@ -280,7 +280,6 @@ public class LoginManager : MonoBehaviour
                     {
                         Debug.Log("Email already exits");
                         textNotifyRegisterEmailPassword.text = "Email already used for account creation";
-                        Debug.Log("ABC da den day choi boi");
                     }
                     else
                     {
@@ -305,8 +304,9 @@ public class LoginManager : MonoBehaviour
                 // Create new User in game when complete register
                 Bag userBag = new Bag();
                 Map userMap = new Map();
-                User newUser = new User(user.UserId, user.DisplayName, 100, 50, userBag, userMap);
+                User newUser = new User(user.UserId, "", 100, 50, userBag);
                 firebaseWriteData.WriteData("Users/" + newUser.id, newUser.ToString());
+                firebaseWriteData.WriteData("Maps/" + newUser.id, userMap.ToString());
                 Debug.Log("User created successfully");
 
                 SceneManager.LoadScene("MenuScene");
@@ -318,6 +318,18 @@ public class LoginManager : MonoBehaviour
     {
         loginForm.SetActive(!loginForm.activeSelf);
         registerForm.SetActive(!registerForm.activeSelf);
+
+        if (loginForm.activeSelf == true)
+        {
+            inputFieldRegisterEmail.text = "";
+            inputFieldRegisterPassword.text = "";
+            inputFieldConfirmPassword.text = "";
+        }
+        if (registerForm.activeSelf == true)
+        {
+            inputFieldEmail.text = "";
+            inputFieldPassword.text = "";
+        }
     }
 
     public void ForgetPassword()
