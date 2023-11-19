@@ -12,6 +12,7 @@ public class User
 
     public Bag userBag { get; set; }
 
+    public Map userMap { get; set; }
 
 
     public User()
@@ -31,7 +32,7 @@ public class User
         this.gold = gold;
         this.diamond = diamond;
     }
-
+    
     public User(string id, string characterName, int gold, int diamond, Bag userBag)
     {
         this.id = id;
@@ -40,6 +41,15 @@ public class User
         this.diamond = diamond;
         this.userBag = userBag;
 
+    }
+    public User(string id, string characterName, int gold, int diamond, Bag userBag,Map userMap)
+    {
+        this.id = id;
+        this.characterName = characterName;
+        this.gold = gold;
+        this.diamond = diamond;
+        this.userBag = userBag;
+        this.userMap = userMap;
     }
 
     public void ShowBag()
@@ -59,7 +69,7 @@ public class User
         }
     }
 
-    public void AddItemToBag(ItemInBag itemInBag, int quantity)
+    public void AddItemToBag(ItemInBag itemInBag, int quantity) 
     {
         if (this.userBag == null)
             this.userBag = new Bag();

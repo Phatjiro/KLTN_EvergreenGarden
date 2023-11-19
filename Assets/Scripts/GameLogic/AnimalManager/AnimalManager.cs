@@ -32,7 +32,17 @@ public class AnimalManager : MonoBehaviour
     [SerializeField]
     private BoxCollider2D boxColliderPiggy;
     [SerializeField]
-    private Button BtnBuyPiggy;
+    private Button BtnBuyPiggy;   
+    
+    [SerializeField]
+    private GameObject cowPrefab;
+    [SerializeField]
+    private GameObject positionCow;
+    [SerializeField]
+    private BoxCollider2D boxColliderCow;
+    [SerializeField]
+    private Button btnBuyCow;
+
   
 
 
@@ -43,7 +53,23 @@ public class AnimalManager : MonoBehaviour
 
         BtnBuyChicken.onClick.AddListener(InstanceNewChicken);
         BtnBuyPiggy.onClick.AddListener(InstanceNewPiggy);
+        btnBuyCow.onClick.AddListener(InstanceNewCow);
 
+    }
+
+    private void InstanceNewCow()
+    {
+        GameObject go = Instantiate(cowPrefab);
+        float randomX = UnityEngine.Random.Range(-4, 4);
+        float randomY = UnityEngine.Random.Range(-3, 3);
+        go.transform.position = positionCow.transform.position + new Vector3(randomX, randomY, 0);
+        go.GetComponent<BasicAnimalMovement>().Area = boxColliderCow;
+
+        var newCow = new Animal("Cow", DateTime.Now, 100, 150, 600);
+        SetInforAnimal(go, newCow);
+        Debug.Log("tao con bo");
+        bredAnimalDBManager.addAnimal(newCow);
+        bredAnimalDBManager.addToDB();
     }
 
     private void InstanceNewChicken()
@@ -84,6 +110,21 @@ public class AnimalManager : MonoBehaviour
             go.GetComponent<AnimalLivingInformation>().information = infor;
         }
     }
+
+    private void InstanceCowFromDB(Animal nCow)
+    {
+        this.GetComponent<UnityMainThreadDispatcher>().Enqueue(() =>
+        {
+            GameObject go = Instantiate(chickenPrefab);
+            float randomX = UnityEngine.Random.Range(-4, 4);
+            float randomY = UnityEngine.Random.Range(-3, 3);
+            go.transform.position = positionCow.transform.position + new Vector3(randomX, randomY, 0);
+            go.GetComponent<BasicAnimalMovement>().Area = boxColliderCow;
+            SetInforAnimal(go, nCow);
+        });
+
+    }
+
     private void InstanceChickenFromDB(Animal chick)
     {
         this.GetComponent<UnityMainThreadDispatcher>().Enqueue(() =>
@@ -121,6 +162,9 @@ public class AnimalManager : MonoBehaviour
             } else if (animal.name.Equals("Piggy"))
             {
                 InstancePiggyFromDB(animal);
+            }else if (animal.name.Equals("Cow"))
+            {
+                InstanceCowFromDB(animal);
             }
         }
     }

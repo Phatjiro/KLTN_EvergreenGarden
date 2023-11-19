@@ -25,7 +25,7 @@ public class BredAnimalDBManager : MonoBehaviour, ReadDataCallback
     }
     private void Start()
     {
-        Debug.Log("ChickenManager" + gameObject);
+        Debug.Log("BredAnimalDBManager" + gameObject);
     }
     public BredAnimalDBManager(List<Animal> lstCurrentBredAnimal)
     {

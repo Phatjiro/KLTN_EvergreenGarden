@@ -10,7 +10,7 @@ public class ItemInBag
         this.type = type;
         this.quantity = quantity;
     }
-
+    public ItemInBag() { }
     public override string ToString()
     {
         return JsonConvert.SerializeObject(this);

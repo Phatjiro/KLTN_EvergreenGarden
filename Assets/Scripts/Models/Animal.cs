@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using System;
 
 [Serializable]
@@ -18,4 +19,9 @@ public class Animal
         this.sellPrice = sellPrice;
     }
     public Animal() { }
+
+    public override string ToString()
+    {
+        return JsonConvert.SerializeObject(this);
+    }
 }
