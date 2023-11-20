@@ -28,8 +28,9 @@ public class ClickEventHandler : MonoBehaviour
         {
             // Nếu chưa hiển thị, hiển thị UI Canvas
             Animal infor = this.GetComponent<AnimalLivingInformation>().information;
-            animalInfor.loadAnimalInfor(infor);
+
             animalInfor.gameObject.SetActive(true);
+            animalInfor.loadAnimalInfor(infor);
         }
 
     }
