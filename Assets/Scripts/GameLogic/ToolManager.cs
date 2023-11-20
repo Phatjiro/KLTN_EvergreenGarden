@@ -16,14 +16,17 @@ public class ToolManager : MonoBehaviour
     Button buttonGloving;
     [SerializeField]
     Button buttonPlatingCorn;
+    [SerializeField]
+    Button buttonPlantingRice;
 
     List<Button> allButtons;
     int indexDiging = 0;
     int indexWatering = 1;
     int indexPlatingGrass = 2;
     int indexPlatingCarrot = 3;
-    int indexGloving = 4;
-    int indexCorn = 5;
+    int indexCorn = 4;
+    int indexRice = 5;
+    int indexGloving = 6;
 
     List<GameObject> allObjects;
 
@@ -41,6 +44,8 @@ public class ToolManager : MonoBehaviour
     GameObject seedBagCarrot;
     [SerializeField]
     GameObject seedBagCorn;
+    [SerializeField]
+    GameObject seedBagRice;
 
     private void Awake()
     {
@@ -48,27 +53,30 @@ public class ToolManager : MonoBehaviour
         buttonWatering.onClick.AddListener(ActiveWatering);
         buttonPlantingGrass.onClick.AddListener(ActivePlatingGrass);
         buttonPlantingCarrot.onClick.AddListener(ActivePlatingCarrot);
-        buttonGloving.onClick.AddListener(ActiveGloving);
         buttonPlatingCorn.onClick.AddListener(ActivePlatingCorn);
+        buttonPlantingRice.onClick.AddListener(ActivePlantingRice);
+        buttonGloving.onClick.AddListener(ActiveGloving);
 
-        allButtons = new List<Button>() 
-        { 
+        allButtons = new List<Button>()
+        {
             buttonDigging,
             buttonWatering,
             buttonPlantingGrass,
             buttonPlantingCarrot,
+            buttonPlatingCorn,
+            buttonPlantingRice,
             buttonGloving,
-            buttonPlatingCorn
         };
 
         allObjects = new List<GameObject>()
-        { 
+        {
             shovelAsset,
             wateringCan,
             seedBagGrass,
             seedBagCarrot,
+            seedBagCorn,
+            seedBagRice,
             glovesRight,
-            seedBagCarrot,
         };
     }
 
@@ -112,6 +120,13 @@ public class ToolManager : MonoBehaviour
         Debug.Log("Change or disable to planting corn");
         bool isPlatingCorn = (FarmAction.currentMode == FarmMode.PlantingCorn);
         ActiveButtonByIndex(indexCorn, !isPlatingCorn, FarmMode.PlantingCorn);
+    }
+
+    private void ActivePlantingRice()
+    {
+        Debug.Log("Change or disable to planting rice");
+        bool isPlatingRice = (FarmAction.currentMode == FarmMode.PlantingRice);
+        ActiveButtonByIndex(indexRice, !isPlatingRice, FarmMode.PlantingRice);
     }
 
     private void ActiveButtonByIndex(int index, bool isActive, FarmMode modeActive)

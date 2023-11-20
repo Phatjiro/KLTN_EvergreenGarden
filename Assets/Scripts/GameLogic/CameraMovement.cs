@@ -9,6 +9,40 @@ public class CameraMovement : MonoBehaviour
 
     public Vector3 minValues, maxValue;
 
+    public float zoomSpeed = 0.3f;
+    public float minZoom = 3f;
+    public float maxZoom = 10f;
+
+    private void Update()
+    {
+        if (Input.touchCount >= 2)
+        {
+            Touch touchZero = Input.GetTouch(0);
+            Touch touchOne = Input.GetTouch(1);
+
+            Vector2 touchZeroPrevPos = touchZero.position - touchZero.deltaPosition;
+            Vector2 touchOnePrevPos = touchOne.position - touchOne.deltaPosition;
+
+            float prevTouchDeltaMag = (touchZeroPrevPos - touchOnePrevPos).magnitude;
+            float touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
+
+            float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+
+            float zoomFactor = deltaMagnitudeDiff * zoomSpeed;
+
+            float newSize = Camera.main.orthographicSize + zoomFactor;
+            newSize = Mathf.Clamp(newSize, minZoom, maxZoom);
+
+            float zoomRatio = newSize / Camera.main.orthographicSize;
+
+            float adjustedZoomSpeed = zoomSpeed * Camera.main.orthographicSize;
+
+            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, newSize, Time.deltaTime * adjustedZoomSpeed);
+
+            Camera.main.transform.localScale /= zoomRatio;
+        }
+    }
+
     // LateUpdate run after function Update run
     /*    private void LateUpdate()
         {

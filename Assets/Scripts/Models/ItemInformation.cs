@@ -5,7 +5,8 @@ public enum ItemType
     Carrot,
     Corn,
     Pig,
-    Cow
+    Cow,
+    Chicken,
 }
 public class ItemInformation
 {

@@ -10,9 +10,23 @@ public class BagItemCanvasManager : MonoBehaviour, ICell
     [SerializeField]
     Text quantityDisplay;
 
+    [SerializeField]
+    Button buttonBackground;
+
+    GameObject canvasObject;
+    GameObject sellBoardObject;
+
     //Model
     private ItemInBag _itemInfo;
     private int _cellIndex;
+
+    private void Awake()
+    {
+        buttonBackground.onClick.AddListener(OpenSellBoard);
+
+        canvasObject = GameObject.FindGameObjectWithTag("Canvas");
+        sellBoardObject = canvasObject.transform.Find("SellBoard").gameObject;
+    }
 
     public void SetIcon(Sprite sprite)
     {
@@ -32,5 +46,10 @@ public class BagItemCanvasManager : MonoBehaviour, ICell
 
         SetQuantity(item.quantity);
         SetIcon(ItemInformationManager._instance.GetIcon(item.type));
+    }
+
+    public void OpenSellBoard()
+    {
+        sellBoardObject.GetComponent<SellBoardManager>().OpenCart(_itemInfo.type);
     }
 }

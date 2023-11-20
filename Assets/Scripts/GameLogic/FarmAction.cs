@@ -18,8 +18,9 @@ public enum FarmMode
     Watering,
     PlantingGrass,
     PlantingCarrot,
-    Gloving,
     PlantingCorn,
+    PlantingRice,
+    Gloving,
 }
 
 [Serializable]

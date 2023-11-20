@@ -13,7 +13,7 @@ public class ShopManager : MonoBehaviour
     [SerializeField]
     Button buttonExitBag;
     [SerializeField]
-    GameObject sellPriceObject;
+    GameObject sellBoardObject;
 
     [SerializeField]
     GameObject wizardShop;
@@ -24,13 +24,15 @@ public class ShopManager : MonoBehaviour
 
     [SerializeField]
     GameObject seedShopObject;
+    [SerializeField]
+    GameObject animalShopObject;
 
     private void Awake()
     {
         buttonWizardPurchase.onClick.AddListener(ActiveShop);
         buttonExitShop.onClick.AddListener(ExitShop);
         buttonWizardSell.onClick.AddListener(ActiveSellBag);
-        buttonExitBag.onClick.AddListener(ExitPriceObject);
+        buttonExitBag.onClick.AddListener(ExitSellBoardObject);
     }
 
     // Start is called before the first frame update
@@ -64,7 +66,7 @@ public class ShopManager : MonoBehaviour
 
     public void ActiveWizard()
     {
-        if (shopObject.activeSelf != true && bagObject.activeSelf != true && seedShopObject.activeSelf != true)
+        if (shopObject.activeSelf != true && bagObject.activeSelf != true && seedShopObject.activeSelf != true && animalShopObject.activeSelf != true)
         {
             wizardShop.SetActive(true);
         }
@@ -91,15 +93,21 @@ public class ShopManager : MonoBehaviour
         wizardShop.SetActive(false);
         bagObject.SetActive(true);
         MoveSellBag(-320);
-        sellPriceObject.SetActive(true);
+        bagObject.GetComponent<TestBag>().ShowBag(true);
     }
 
-    public void ExitPriceObject()
+    public void ExitSellBoardObject()
     {
-        if (sellPriceObject != null && sellPriceObject.activeSelf == true)
+        if (sellBoardObject != null && sellBoardObject.activeSelf == true)
         {
-            sellPriceObject.SetActive(false);
+            sellBoardObject.SetActive(false);
             MoveSellBag(320);
+            bagObject.GetComponent<TestBag>().TurnOffAllowSell();
+        }
+        else if (TestBag.isAllowToSell == true)
+        {
+            MoveSellBag(320);
+            bagObject.GetComponent<TestBag>().TurnOffAllowSell();
         }
     }
 
