@@ -11,6 +11,8 @@ public class SeedShopManager : MonoBehaviour
     [SerializeField]
     Button buttonCorn;
     [SerializeField]
+    Button buttonRice;
+    [SerializeField]
     Button buttonExit;
 
     // Cart
@@ -35,12 +37,6 @@ public class SeedShopManager : MonoBehaviour
     [SerializeField]
     Button buttonSubmit;
 
-    // Sprite
-    [SerializeField]
-    Sprite spriteCarrot;
-    [SerializeField]
-    Sprite spriteCorn;
-
     ItemType itemChoose;
 
     [SerializeField]
@@ -59,6 +55,11 @@ public class SeedShopManager : MonoBehaviour
         buttonCorn.onClick.AddListener(() =>
         {
             OpenCart(ItemType.Corn);
+        });
+
+        buttonRice.onClick.AddListener(() =>
+        {
+            OpenCart(ItemType.Rice);
         });
 
         buttonExit.onClick.AddListener(ExitSeedShop);
@@ -88,11 +89,15 @@ public class SeedShopManager : MonoBehaviour
         switch (itemChoose)
         {
             case ItemType.Carrot:
-                SetUpItemCart(spriteCarrot, currentQuantity, 2);
+                SetUpItemCart(ItemInformationManager._instance.GetIcon(ItemType.Carrot), currentQuantity, 2);
                 break;
 
             case ItemType.Corn:
-                SetUpItemCart(spriteCorn, currentQuantity, 4);
+                SetUpItemCart(ItemInformationManager._instance.GetIcon(ItemType.Corn), currentQuantity, 4);
+                break;
+
+            case ItemType.Rice:
+                SetUpItemCart(ItemInformationManager._instance.GetIcon(ItemType.Rice), currentQuantity, 1);
                 break;
 
             default:
@@ -148,7 +153,8 @@ public class SeedShopManager : MonoBehaviour
             switch (shopItemType)
             {
                 case ShopItemType.Seeds:
-                    userLoaderManager.userInGame.AddItemToBag(new ItemInBag(itemChoose, 1), currentQuantity);
+                    Debug.Log($"Add {itemChoose} : {currentQuantity}");
+                    userLoaderManager.userInGame.AddItemToBagAndLoadUI(itemChoose, currentQuantity);
                     userLoaderManager.userInGame.gold -= int.Parse(textTotal.text);
                     firebaseWriteData.WriteData("Users/" + userLoaderManager.userInGame.id, userLoaderManager.userInGame.ToString());
                     break;

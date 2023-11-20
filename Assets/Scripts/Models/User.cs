@@ -47,21 +47,30 @@ public class User
         }
     }
 
-    private void AddItemToBagListToShow(ItemType itemType, int quantity)
+    private void ReloadBagUI(ItemType itemType, int quantity)
     {
         BagItemLoader loader = BagItemLoader.instance;
         if (loader != null)
         {
-            loader.AddItemToLst(new ItemInBag(itemType, quantity));
+            loader.SetLstItem(this.userBag.lstItem);
+            loader.ReloadUI();
         }
     }
 
-    public void AddItemToBag(ItemInBag itemInBag, int quantity)
+    public void AddItemToBagAndLoadUI(ItemType itemType, int quantity)
     {
         if (this.userBag == null)
             this.userBag = new Bag();
-        this.userBag.AddItem(itemInBag, quantity);
-        AddItemToBagListToShow(itemInBag.type, quantity);
+        this.userBag.AddItem(itemType, quantity);
+        ReloadBagUI(itemType, quantity);
+    }
+    public void SellItemAndLoadUI(ItemType itemType, int quantity)
+    {
+        Debug.Log("Sell Item and load UI");
+        if (this.userBag == null)
+            this.userBag = new Bag();
+        this.userBag.RemoveItem(itemType, quantity);
+        ReloadBagUI(itemType, quantity);
     }
 
     public override string ToString()

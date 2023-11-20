@@ -8,6 +8,9 @@ public class FirebaseWriteData : MonoBehaviour
 
     public void WriteData(string path, string dataToWrite)
     {
+#if UNITY_EDITOR
+        return;
+#endif
         //FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
         //{
         FirebaseApp app = FirebaseApp.DefaultInstance;

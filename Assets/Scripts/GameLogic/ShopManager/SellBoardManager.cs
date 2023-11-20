@@ -35,6 +35,7 @@ public class SellBoardManager : MonoBehaviour
         buttonMinus.onClick.AddListener(MinusItem);
         buttonPlus.onClick.AddListener(PlusItem);
         buttonSubmit.onClick.AddListener(SubmitItem);
+        buttonSellAll.onClick.AddListener(SellAllChooseItem);
     }
 
     // Start is called before the first frame update
@@ -67,6 +68,10 @@ public class SellBoardManager : MonoBehaviour
 
             case ItemType.Corn:
                 SetUpItemSellBoard(ItemInformationManager._instance.GetIcon(ItemType.Corn), currentQuantity, 16);
+                break;
+
+            case ItemType.Rice:
+                SetUpItemSellBoard(ItemInformationManager._instance.GetIcon(ItemType.Rice), currentQuantity, 4);
                 break;
 
             default:
@@ -121,22 +126,28 @@ public class SellBoardManager : MonoBehaviour
 
     public void SubmitItem()
     {
+        Debug.Log("SubmitItem");
+        userLoaderManager.userInGame.SellItemAndLoadUI(itemChoose, currentQuantity);
+        
+        userLoaderManager.userInGame.gold += int.Parse(textTotal.text);
+        firebaseWriteData.WriteData("Users/" + userLoaderManager.userInGame.id, userLoaderManager.userInGame.ToString());
+        gameObject.SetActive(false);
+    }
+
+    public void SellAllChooseItem()
+    {
+        int quantityOfChooseItem = 0;
         for (int i = 0; i < userLoaderManager.userInGame.userBag.GetLength(); i++)
         {
             if (userLoaderManager.userInGame.userBag.lstItem[i].type == itemChoose)
             {
-                userLoaderManager.userInGame.userBag.lstItem[i].quantity -= currentQuantity;
-            }    
+                quantityOfChooseItem = userLoaderManager.userInGame.userBag.lstItem[i].quantity;
+                userLoaderManager.userInGame.SellItemAndLoadUI(itemChoose, quantityOfChooseItem);
+                break;
+            }
         }
-        userLoaderManager.userInGame.gold += int.Parse(textTotal.text);
+        userLoaderManager.userInGame.gold += (int.Parse(textPrice.text) * quantityOfChooseItem);
         firebaseWriteData.WriteData("Users/" + userLoaderManager.userInGame.id, userLoaderManager.userInGame.ToString());
         gameObject.SetActive(false);
-
-        BagItemLoader loader = BagItemLoader.instance;
-        if (loader != null)
-        {
-            Debug.Log("Vao load UI Bag");
-            loader.ReloadUI();
-        }
     }
 }

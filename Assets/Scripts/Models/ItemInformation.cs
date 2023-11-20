@@ -4,6 +4,7 @@ public enum ItemType
 {
     Carrot,
     Corn,
+    Rice,
     Pig,
     Cow,
     Chicken,

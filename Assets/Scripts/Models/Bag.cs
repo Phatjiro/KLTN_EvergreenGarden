@@ -15,20 +15,35 @@ public class Bag
         this.lstItem = lstItem;
     }
 
-    public void AddItem(ItemInBag item, int quantity) 
+    public void AddItem(ItemType itemType, int quantity) 
     {
         if (lstItem == null) lstItem = new List<ItemInBag>();
         for (int i = 0; i < lstItem.Count; i++)
         {
-            if (lstItem[i].type == item.type)
+            if (lstItem[i].type == itemType)
             {
                 lstItem[i].quantity += quantity;
                 return;
             }
         }
-        item.quantity = quantity;
-        lstItem.Add(item);
+        lstItem.Add(new ItemInBag(itemType, quantity));
         return;
+    }
+    public void RemoveItem(ItemType itemType, int quantity)
+    {
+        if (lstItem == null) return;
+        for (int i = 0; i < lstItem.Count; i++)
+        {
+            if (lstItem[i].type == itemType)
+            {
+                int crrQuantity = lstItem[i].quantity;
+                crrQuantity -= quantity;
+                if (crrQuantity < 0)
+                    crrQuantity = 0;
+                lstItem[i].quantity = crrQuantity;
+                return;
+            }
+        }
     }
     public int GetQuantityOfType(ItemType itemType)
     {

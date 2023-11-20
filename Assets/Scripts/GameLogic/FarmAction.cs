@@ -68,6 +68,10 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
     [SerializeField]
     List<TileBase> tileBaseCorn;
 
+    // Rice
+    [SerializeField]
+    List<TileBase> tilebaseRice;
+
     List<PlantTimeInformation> lstPlantedTime;
 
     [SerializeField]
@@ -162,6 +166,9 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                 break;
             case ItemType.Corn:
                 searchList = this.tileBaseCorn;
+                break;
+            case ItemType.Rice:
+                searchList = this.tilebaseRice;
                 break;
             default:
                 break;
@@ -309,6 +316,20 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                             ShowNotification("Please plant the dug wattered bed", 2);
                         }
                         break;
+
+                    case FarmMode.PlantingRice:
+                        if (cellInGroundWatered == tileToPlace_groundWatered && allTileMap.tilemap_Planting.GetTile(cellPos) == null)
+                        {
+                            allTileMap.tilemap_Planting.SetTile(cellPos, tilebaseRice[0]);
+                            AddPlantTime(DateTime.Now, ItemType.Rice, cellPos, DateTime.Now.AddSeconds(10));
+                            mapLoaderManager.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Rice1));
+                        }
+                        else
+                        {
+                            ShowNotification("Please plant the dug wattered bed", 2);
+                        }
+                        break;
+
                     case FarmMode.Gloving:
                         if (cellInPlanting == tilebaseCarrot[3])
                         {
@@ -317,6 +338,10 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                         if (cellInPlanting == tileBaseCorn[3])
                         {
                             Harvest(itemType: ItemType.Corn, quantity: 1, cellPos);
+                        }
+                        if (cellInPlanting == tilebaseRice[3])
+                        {
+                            Harvest(itemType: ItemType.Rice, quantity: 1, cellPos);
                         }
                         break;
 
@@ -334,8 +359,8 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
         ItemInBag item = new ItemInBag(itemType, quantity);
 
         // Add item to user bag
-        userLoaderManager.userInGame.AddItemToBag(item, quantity);
-        userLoaderManager.userInGame.ShowBag();
+        userLoaderManager.userInGame.AddItemToBagAndLoadUI(itemType, quantity);
+        //userLoaderManager.userInGame.ShowBag();
     }
 
 

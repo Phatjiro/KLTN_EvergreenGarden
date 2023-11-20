@@ -66,7 +66,7 @@ public class ShopManager : MonoBehaviour
 
     public void ActiveWizard()
     {
-        if (shopObject.activeSelf != true && bagObject.activeSelf != true && seedShopObject.activeSelf != true && animalShopObject.activeSelf != true)
+        if (shopObject.activeSelf != true && TestBag.IsShowing() != true && seedShopObject.activeSelf != true && animalShopObject.activeSelf != true)
         {
             wizardShop.SetActive(true);
         }
@@ -79,6 +79,7 @@ public class ShopManager : MonoBehaviour
 
     public void ActiveShop()
     {
+        Debug.Log("Active shop");
         wizardShop.SetActive(false);
         shopObject.SetActive(true);
     }

@@ -1,6 +1,8 @@
+using PimDeWitte.UnityMainThreadDispatcher;
 using PolyAndCode.UI;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BagItemLoader : MonoBehaviour, IRecyclableScrollRectDataSource
@@ -19,11 +21,16 @@ public class BagItemLoader : MonoBehaviour, IRecyclableScrollRectDataSource
     private void Awake()
     {
         _recyclableScrollRect.DataSource = this;
+        ReloadUI();
     }
 
     private void Start()
     {
         instance = this;
+    }
+    private void OnEnable()
+    {
+        ReloadUI();
     }
     public void SetLstItem(List<ItemInBag> lst)
     {
@@ -31,10 +38,7 @@ public class BagItemLoader : MonoBehaviour, IRecyclableScrollRectDataSource
     }
     public void ReloadUI()
     {
-        _recyclableScrollRect.ReloadData();
-    }
-    private void OnEnable()
-    {
+        Debug.Log("Reload bag");
         _recyclableScrollRect.ReloadData();
     }
 

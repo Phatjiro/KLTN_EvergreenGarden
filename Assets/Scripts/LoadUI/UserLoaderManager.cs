@@ -81,6 +81,7 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
             {
                 Debug.Log("Vao load UI Bag");
                 loader.SetLstItem(userInGame.userBag.lstItem);
+                loader.ReloadUI();
             }
         }
 
