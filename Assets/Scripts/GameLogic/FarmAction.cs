@@ -9,6 +9,8 @@ public interface ReadDataCallback
 {
     public void OnReadDataMapCompleted(string data);
     public void OnReadDataUserCompleted(string data); 
+
+    public void OnReadDataAnimalCompleted(String data);
 }
 
 public enum FarmMode
@@ -130,7 +132,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
         }
 
         imageNotification.gameObject.SetActive(false);
-        InvokeRepeating("UpdateMapDataToFirebase", 1, 10);
+        InvokeRepeating("UpdateMapDataToFirebase", 20, 10);
         InvokeRepeating("GrowPlant", 0, 1);
     }
 
@@ -382,5 +384,10 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
     {
         if (NotificationManager.instance == null) return;
         NotificationManager.instance.ShowNotification(mess, time);
+    }
+
+    public void OnReadDataAnimalCompleted(string data)
+    {
+        
     }
 }

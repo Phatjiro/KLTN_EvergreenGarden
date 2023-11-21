@@ -5,12 +5,13 @@ using UnityEngine;
 [Serializable]
 public class User
 {
-    public string id;
-    public string characterName;
-    public int gold;
-    public int diamond;
+    public string id { get; set; }
+    public string characterName { get; set; }
+    public int gold { get; set; }
+    public int diamond { get; set; }
 
-    public Bag userBag;
+    public Bag userBag { get; set; }
+
 
     public User()
     {
@@ -18,7 +19,6 @@ public class User
         characterName = "Default name";
         gold = 0;
         diamond = 0;
-
         userBag = new Bag();
     }
 
@@ -29,6 +29,15 @@ public class User
         this.gold = gold;
         this.diamond = diamond;
     }
+    
+    public User(string id, string characterName, int gold, int diamond, Bag userBag)
+    {
+        this.id = id;
+        this.characterName = characterName;
+        this.gold = gold;
+        this.diamond = diamond;
+        this.userBag = userBag;
+	}
 
     public User(string id, string characterName, int gold, int diamond, Bag userBag)
     {

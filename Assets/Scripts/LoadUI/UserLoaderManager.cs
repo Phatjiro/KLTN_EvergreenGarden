@@ -102,10 +102,16 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
         return;
     }
 
+
     public void SetDisplayName(string name)
     {
         this.userInGame.characterName = name;
         textMeshProCharacterName.text = name;
         firebaseWriteData.WriteData("Users/" + userInGame.id, userInGame.ToString());
+	}
+
+    public void OnReadDataAnimalCompleted(string data)
+    {
+        
     }
 }

@@ -7,7 +7,7 @@ using UnityEngine;
 [Serializable]
 public class Map
 {
-    public List<CellData> lstCell;
+    public List<CellData> lstCell { get; set; }
 
     public Map()
     {

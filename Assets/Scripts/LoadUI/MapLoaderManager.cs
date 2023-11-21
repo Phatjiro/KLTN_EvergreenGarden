@@ -112,4 +112,9 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
     {
         return;
     }
+
+    public void OnReadDataAnimalCompleted(string data)
+    {
+       
+    }
 }

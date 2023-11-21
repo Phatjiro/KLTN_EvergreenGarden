@@ -11,9 +11,9 @@ public enum ItemType
 }
 public class ItemInformation
 {
-    public string name;
-    public int buyPrice;
-    public int sellPrice;
+    public string name { get; set; }
+    public int buyPrice { get; set; }
+    public int sellPrice { get; set; }
 
     public ItemInformation() 
     {
@@ -35,19 +35,3 @@ public class ItemInformation
     }
 }
 
-public class ItemInBag
-{
-    public ItemType type;
-    public int quantity;
-
-    public ItemInBag(ItemType type, int quantity)
-    {
-        this.type = type;
-        this.quantity = quantity;
-    }
-
-    public override string ToString()
-    {
-        return JsonConvert.SerializeObject(this);
-    }
-}
