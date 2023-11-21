@@ -8,6 +8,8 @@ public class AnimalShopManager : MonoBehaviour
     [SerializeField]
     Button buttonPig;
     [SerializeField]
+    Button buttonCow;
+    [SerializeField]
     Button buttonExit;
 
     // Cart
@@ -35,8 +37,10 @@ public class AnimalShopManager : MonoBehaviour
     Sprite spriteChicken;
     [SerializeField]
     Sprite spritePig;
+    [SerializeField]
+    Sprite spriteCow;
 
-    ItemType itemChoose;
+    public static ItemType itemChoose;
 
     // Start is called before the first frame update
     void Start()
@@ -49,6 +53,11 @@ public class AnimalShopManager : MonoBehaviour
         buttonPig.onClick.AddListener(() =>
         {
             OpenCart(ItemType.Pig);
+        });
+
+        buttonCow.onClick.AddListener(() =>
+        {
+            OpenCart(ItemType.Cow);
         });
 
         buttonExit.onClick.AddListener(ExitSeedShop);
@@ -75,11 +84,15 @@ public class AnimalShopManager : MonoBehaviour
         switch (itemChoose)
         {
             case ItemType.Chicken:
-                SetUpItemCart(spriteChicken, currtentQuantity, 20);
+                SetUpItemCart(spriteChicken, currtentQuantity, 50);
                 break;
 
             case ItemType.Pig:
-                SetUpItemCart(spritePig, currtentQuantity, 40);
+                SetUpItemCart(spritePig, currtentQuantity, 100);
+                break;
+
+            case ItemType.Cow:
+                SetUpItemCart(spriteCow, currtentQuantity, 150);
                 break;
 
             default:

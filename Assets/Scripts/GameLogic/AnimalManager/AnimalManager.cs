@@ -57,7 +57,7 @@ public class AnimalManager : MonoBehaviour
 
     }
 
-    private void InstanceNewCow()
+    public void InstanceNewCow()
     {
         GameObject go = Instantiate(cowPrefab);
         float randomX = UnityEngine.Random.Range(-4, 4);
@@ -72,7 +72,7 @@ public class AnimalManager : MonoBehaviour
         bredAnimalDBManager.addToDB();
     }
 
-    private void InstanceNewChicken()
+    public void InstanceNewChicken()
     {
         GameObject go = Instantiate(chickenPrefab);
         float randomX = UnityEngine.Random.Range(-4, 4);
@@ -80,16 +80,16 @@ public class AnimalManager : MonoBehaviour
         go.transform.position = positionChicken.transform.position + new Vector3(randomX, randomY, 0);
         go.GetComponent<BasicAnimalMovement>().Area = boxColliderChicken;
 
-        var newchicken = new Animal("Chicken", DateTime.Now, 30, 50, 100);
+        var newchicken = new Animal("Chicken", DateTime.Now, 30, 50, 200);
         SetInforAnimal(go, newchicken);
         Debug.Log("tao con ga");
         bredAnimalDBManager.addAnimal(newchicken);
         bredAnimalDBManager.addToDB();
        
     }
-  
 
-    private void InstanceNewPiggy()
+
+    public void InstanceNewPiggy()
     {
         GameObject go = Instantiate(piggyPrefab);
         float randomX = UnityEngine.Random.Range(-4, 4);
@@ -97,13 +97,13 @@ public class AnimalManager : MonoBehaviour
         go.transform.position = positionPiggy.transform.position + new Vector3(randomX, randomY, 0);
         go.GetComponent<BasicAnimalMovement>().Area = boxColliderPiggy;
 
-        var newPiggy = new Animal("Piggy", DateTime.Now, 50, 70, 120);
+        var newPiggy = new Animal("Piggy", DateTime.Now, 50, 100, 400);
         SetInforAnimal(go,newPiggy);
         Debug.Log("tao con heo");
         bredAnimalDBManager.addAnimal(newPiggy);
         bredAnimalDBManager.addToDB();
     }
-    private void SetInforAnimal(GameObject go, Animal infor)
+    public void SetInforAnimal(GameObject go, Animal infor)
     {
         if (go.GetComponent<AnimalLivingInformation>() != null)
         {
@@ -111,7 +111,7 @@ public class AnimalManager : MonoBehaviour
         }
     }
 
-    private void InstanceCowFromDB(Animal nCow)
+    public void InstanceCowFromDB(Animal nCow)
     {
         this.GetComponent<UnityMainThreadDispatcher>().Enqueue(() =>
         {
@@ -125,7 +125,7 @@ public class AnimalManager : MonoBehaviour
 
     }
 
-    private void InstanceChickenFromDB(Animal chick)
+    public void InstanceChickenFromDB(Animal chick)
     {
         this.GetComponent<UnityMainThreadDispatcher>().Enqueue(() =>
         {
@@ -138,7 +138,7 @@ public class AnimalManager : MonoBehaviour
         });
 
     }
-    private void InstancePiggyFromDB(Animal pig)
+    public void InstancePiggyFromDB(Animal pig)
     {
         this.GetComponent<UnityMainThreadDispatcher>().Enqueue(() =>
         {

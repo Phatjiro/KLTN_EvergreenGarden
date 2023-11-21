@@ -44,6 +44,9 @@ public class SeedShopManager : MonoBehaviour
     [SerializeField]
     FirebaseWriteData firebaseWriteData;
 
+    [SerializeField]
+    AnimalManager animalManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -68,6 +71,8 @@ public class SeedShopManager : MonoBehaviour
         buttonSubmit.onClick.AddListener(()=> {
             SubmitBuyItem(ShopTypeManager.crrItemType);
         });
+
+        gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -160,6 +165,30 @@ public class SeedShopManager : MonoBehaviour
                     break;
 
                 case ShopItemType.Animals:
+                    switch (AnimalShopManager.itemChoose)
+                    {
+                        case ItemType.Chicken:
+                            for (int i = 0; i < currentQuantity; i++)
+                            {
+                                animalManager.InstanceNewChicken();
+                            }
+                            break;
+                        case ItemType.Pig:
+                            for (int i = 0; i < currentQuantity; i++)
+                            {
+                                animalManager.InstanceNewPiggy();
+                            }
+                            break;
+                        case ItemType.Cow:
+                            for (int i = 0; i < currentQuantity; i++)
+                            {
+                                animalManager.InstanceNewCow();
+                            }                            
+                            break;
+                        default:
+                            break;
+                    }
+                    userLoaderManager.userInGame.gold -= int.Parse(textTotal.text);
                     break;
 
                 default:
