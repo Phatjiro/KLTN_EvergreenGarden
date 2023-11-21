@@ -39,15 +39,6 @@ public class User
         this.userBag = userBag;
 	}
 
-    public User(string id, string characterName, int gold, int diamond, Bag userBag)
-    {
-        this.id = id;
-        this.characterName = characterName;
-        this.gold = gold;
-        this.diamond = diamond;
-        this.userBag = userBag;
-    }
-
     public void ShowBag()
     {
         foreach (var item in userBag.lstItem)

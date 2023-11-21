@@ -33,6 +33,8 @@ public class ShopManager : MonoBehaviour
         buttonExitShop.onClick.AddListener(ExitShop);
         buttonWizardSell.onClick.AddListener(ActiveSellBag);
         buttonExitBag.onClick.AddListener(ExitSellBoardObject);
+
+        this.GetComponent<BoxCollider2D>().isTrigger = true;
     }
 
     // Start is called before the first frame update
@@ -54,7 +56,6 @@ public class ShopManager : MonoBehaviour
                 // Use ray to check if user click on Shop
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
-
                 if (hit.collider != null && hit.collider.gameObject.tag == "Shop")
                 {
                     ActiveWizard();

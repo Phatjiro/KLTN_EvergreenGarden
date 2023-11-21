@@ -63,9 +63,11 @@ public class BredAnimalDBManager : MonoBehaviour, ReadDataCallback
 
     public void loadDataDB()
     {
-       
+#if UNITY_EDITOR
+        return;
+#endif
         firebaseUser = FirebaseAuth.DefaultInstance.CurrentUser;
-        
+
         Debug.Log("start read data animal");
         Debug.Log("firebase user null: " + firebaseUser == null);
         readData.ReadData("Animals/" + firebaseUser.UserId, this, ReadDataType.Animal);

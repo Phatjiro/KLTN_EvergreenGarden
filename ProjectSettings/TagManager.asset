@@ -9,6 +9,8 @@ TagManager:
   - Audio
   - SellBoard
   - Canvas
+  - Carrot4
+  - AnimalInfo
   layers:
   - Default
   - TransparentFX
@@ -16,22 +18,22 @@ TagManager:
   - 
   - Water
   - UI
-  - character
+  - 
   - interactable
   - bottom
+  - Ground
+  - 
+  - 
+  - 
+  - 
+  - Shop
   - 
   - 
   - 
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Character
   - 
   - 
   - 

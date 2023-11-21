@@ -36,22 +36,19 @@ public class FirebaseReadData : MonoBehaviour
                     {
                         switch (dataType)
                         {
-                            switch (dataType)
-                            {
-                                case ReadDataType.Map:
-                                    callback.OnReadDataMapCompleted(json);
-                                    break;
-                                case ReadDataType.User:
-                                    Debug.Log("Call data user");
-                                    callback.OnReadDataUserCompleted(json);
-                                    break;
-                                case ReadDataType.Animal:
-                                    Debug.Log("Call data Animal");
-                                    callback.OnReadDataAnimalCompleted(json);
-                                    break;
-                                default:
-                                    break;
-                            }
+                            case ReadDataType.Map:
+                                callback.OnReadDataMapCompleted(json);
+                                break;
+                            case ReadDataType.User:
+                                Debug.Log("Call data user");
+                                callback.OnReadDataUserCompleted(json);
+                                break;
+                            case ReadDataType.Animal:
+                                Debug.Log("Call data Animal");
+                                callback.OnReadDataAnimalCompleted(json);
+                                break;
+                            default:
+                                break;
                         }
                     }
                 }
