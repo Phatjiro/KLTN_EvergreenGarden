@@ -50,6 +50,13 @@ public class BagItemCanvasManager : MonoBehaviour, ICell
 
     public void OpenSellBoard()
     {
-        sellBoardObject.GetComponent<SellBoardManager>().OpenCart(_itemInfo.type);
+        if (int.Parse(quantityDisplay.text.Substring(1)) > 0)
+        {
+            sellBoardObject.GetComponent<SellBoardManager>().OpenCart(_itemInfo.type);
+        }
+        else
+        {
+            NotificationManager.instance.ShowNotification("Don't have item to sell", 3);
+        }
     }
 }

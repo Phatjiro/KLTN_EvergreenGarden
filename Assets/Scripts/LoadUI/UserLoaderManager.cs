@@ -57,10 +57,8 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
 
     public void OnDataChanged(object sender, ValueChangedEventArgs args)
     {
-        Debug.Log("An taooooooooooo");
         if (args.DatabaseError != null)
         {
-            Debug.Log("An chuoiiiiiiiiiiiii");
             Debug.LogError(args.DatabaseError.Message);
             return;
         }
@@ -94,7 +92,6 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
             }
             isLoadedUser = true;
         });
-        Debug.Log("An cammmmmmmmm");
     }
 
     public void OnReadDataMapCompleted(string data)
