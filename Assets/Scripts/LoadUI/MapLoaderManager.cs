@@ -1,6 +1,7 @@
 using Firebase.Auth;
 using Firebase.Database;
 using Newtonsoft.Json;
+using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -26,6 +27,10 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
     [SerializeField]
     TileBase tileToPlace_groundWatered;
 
+
+    [SerializeField]
+    FarmAction farmAction;
+
     private void Awake()
     {
         firebaseUser = FirebaseAuth.DefaultInstance.CurrentUser;
@@ -49,12 +54,12 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
 
     public void OnDataChanged(object sender, ValueChangedEventArgs args)
     {
-        if (args.DatabaseError != null)
+       /* if (args.DatabaseError != null)
         {
             Debug.LogError(args.DatabaseError.Message);
             return;
         }
-        firebaseReadData.ReadData("Maps/" + firebaseUser.UserId, this, ReadDataType.Map);
+        firebaseReadData.ReadData("Maps/" + firebaseUser.UserId, this, ReadDataType.Map);*/
     }
 
     private void ApplyCellDataToTilemap(CellData cellData, Tilemap tilemap, TileBase tileBase)
@@ -65,8 +70,17 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
 
     private void CellDataToTiseBase(CellData cellData)
     {
+        Debug.Log("-----------------------------------------------");
+        Debug.Log("Start to set cellData: " + cellData.cellState);
         TileBase tileToPlace = null;
         Tilemap tilemap = null;
+        Vector3Int cellPos = new Vector3Int(cellData.x, cellData.y, 0);
+
+        // Data to check state plant
+        DateTime platnedTime = cellData.dateTime;
+        float secondPassed = (float)DateTime.Now.Subtract(platnedTime).TotalSeconds;
+        bool isNeedAddPlantTime = true;
+
         switch (cellData.cellState)
         {
             case CellState.None:
@@ -74,17 +88,99 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
             case CellState.Ground:
                 break;
             case CellState.Digged:
-                tileToPlace = tileToPlace_groundDigged;
-                tilemap = tilemap_FarmGround;
-                Vector3Int cellPos = new Vector3Int(cellData.x, cellData.y, 0);
-                ApplyCellDataToTilemap(cellData, tilemap, tileToPlace);
+                Debug.Log("Set state Dig");
+                farmAction.DiggingGround(cellPos, false);
                 break;
             case CellState.Watered:
-                tileToPlace = tileToPlace_groundWatered;
-                tilemap = tilemap_GroundWatered;
-                ApplyCellDataToTilemap(cellData, tilemap, tileToPlace);
+                Debug.Log("Set state Water");
+                farmAction.DiggingGround(cellPos, false);
+                farmAction.WateringGround(cellPos, false);
                 break;
-            case CellState.Carrot1:
+            case CellState.Carrot:
+                Debug.Log("Set state Carrot");
+                farmAction.DiggingGround(cellPos, false);
+                farmAction.WateringGround(cellPos, false);
+
+                if (secondPassed > 60)
+                {
+                    //Carrot4
+                    farmAction.Plant(cellPos, ItemType.Carrot, 3, false, false);
+                    isNeedAddPlantTime = false;
+                }
+                else if (secondPassed > 40)
+                {
+                    //Carrot3
+                    farmAction.Plant(cellPos, ItemType.Carrot, 2, false, false);
+                } else if (secondPassed > 20)
+                {
+                    //Carrot2
+                    farmAction.Plant(cellPos, ItemType.Carrot, 1, false, false);
+                }
+                else
+                {
+                    //Carrot1
+                    farmAction.Plant(cellPos, ItemType.Carrot, 0, false, false);
+                }
+                if (isNeedAddPlantTime)
+                    farmAction.AddPlantTime(platnedTime, ItemType.Carrot, cellPos, DateTime.Now.AddSeconds(20));
+                break;
+            case CellState.Corn:
+                Debug.Log("Set state Corn");
+                farmAction.DiggingGround(cellPos, false);
+                farmAction.WateringGround(cellPos, false);
+
+                if (secondPassed > 60)
+                {
+                    //Corn4
+                    farmAction.Plant(cellPos, ItemType.Corn, 3, false, false);
+                    isNeedAddPlantTime = false;
+                }
+                else if (secondPassed > 40)
+                {
+                    //Corn3
+                    farmAction.Plant(cellPos, ItemType.Corn, 2, false, false);
+                }
+                else if (secondPassed > 20)
+                {
+                    //Corn2
+                    farmAction.Plant(cellPos, ItemType.Corn, 1, false, false);
+                }
+                else
+                {
+                    //Corn1
+                    farmAction.Plant(cellPos, ItemType.Corn, 0, false, false);
+                }
+                if (isNeedAddPlantTime)
+                    farmAction.AddPlantTime(platnedTime, ItemType.Corn, cellPos, DateTime.Now.AddSeconds(20));
+                break;
+            case CellState.Rice:
+                Debug.Log("Set state Rice");
+                farmAction.DiggingGround(cellPos, false);
+                farmAction.WateringGround(cellPos, false);
+
+                if (secondPassed > 60)
+                {
+                    //Rice4
+                    farmAction.Plant(cellPos, ItemType.Rice, 3, false, false);
+                    isNeedAddPlantTime = false;
+                }
+                else if (secondPassed > 40)
+                {
+                    //Rice3
+                    farmAction.Plant(cellPos, ItemType.Rice, 2, false, false);
+                }
+                else if (secondPassed > 20)
+                {
+                    //Rice2
+                    farmAction.Plant(cellPos, ItemType.Rice, 1, false, false);
+                }
+                else
+                {
+                    //Rice1
+                    farmAction.Plant(cellPos, ItemType.Rice, 0, false, false);
+                }
+                if (isNeedAddPlantTime)
+                    farmAction.AddPlantTime(platnedTime, ItemType.Rice, cellPos, DateTime.Now.AddSeconds(20));
                 break;
             default:
                 break;
@@ -93,7 +189,7 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
 
     private void LoadMap(Map map)
     {
-        Debug.Log("Map length: " + map.GetLength());
+        Debug.Log("MapLoaderManager - LoadMap: " + map.GetLength());
         for (int i = 0; i < map.GetLength(); i++)
         {
             CellDataToTiseBase(map.lstCell[i]);
@@ -102,6 +198,11 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
 
     public void OnReadDataMapCompleted(string data)
     {
+        if (isLoadedMap)
+        {
+            Debug.Log("Map loaded -> do not need load again");
+            return;
+        }
         Debug.Log("MapLoader Data: " + data);
         userMap = JsonConvert.DeserializeObject<Map>(data);
         LoadMap(userMap);

@@ -6,9 +6,9 @@ public enum CellState {
     Ground,
     Digged,
     Watered,
-    Carrot1, Carrot2, Carrot3, Carrot4,
-    Corn1, Corn2, Corn3, Corn4,
-    Rice1, Rice2, Rice3, Rice4,
+    Carrot,
+    Corn,
+    Rice
 }
 
 [Serializable]

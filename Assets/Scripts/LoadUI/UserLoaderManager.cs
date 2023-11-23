@@ -83,11 +83,14 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
             }
         }
 
+        Debug.Log("Check name!!");
         this.GetComponent<UnityMainThreadDispatcher>().Enqueue(() =>
         {
             textMeshProCharacterName.text = userInGame.characterName;
-            if (userInGame.characterName == "")
+            Debug.Log("Ten nhan vat hien tai: " + userInGame.characterName);
+            if (userInGame.characterName == "" || userInGame.characterName == null)
             {
+                Debug.Log("Ten nhan vat hien tai 2: " + userInGame.characterName);
                 wizardCharacterName.SetActive(true);
             }
             isLoadedUser = true;

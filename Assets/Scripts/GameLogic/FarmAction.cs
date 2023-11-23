@@ -144,7 +144,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
         firebaseWriteData.WriteData("Maps/" + userLoaderManager.userInGame.id, mapLoaderManager.userMap.ToString());
     }
 
-    private void AddPlantTime(DateTime currentDateTime, ItemType itemType, Vector3Int cellPos, DateTime nextGrowTime)
+    public void AddPlantTime(DateTime currentDateTime, ItemType itemType, Vector3Int cellPos, DateTime nextGrowTime)
     {
         if (lstPlantedTime == null)
         { 
@@ -263,17 +263,13 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                     case FarmMode.Digging:
                         if (allTileMap.tilemap_Farmable.GetTile(cellPos) != null)
                         {
-                            Debug.Log("Digging at: " + cellPos);
-                            allTileMap.tilemap_Farmable.SetTile(cellPos, tileToPlace_groundDigged);
-                            CellData cellData = new CellData(cellPos.x, cellPos.y, CellState.Digged);
-                            mapLoaderManager.userMap.AddCell(cellData);
+                            DiggingGround(cellPos);
                         }
                         break;
                     case FarmMode.Watering:
                         if (allTileMap.tilemap_Farmable.GetTile(cellPos) == tileToPlace_groundDigged)
                         {
-                            allTileMap.tilemap_GroundWatered.SetTile(cellPos, tileToPlace_groundWatered);
-                            mapLoaderManager.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Watered));
+                            WateringGround(cellPos);
                         }
                         else
                         {
@@ -295,10 +291,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                     case FarmMode.PlantingCarrot:
                         if (cellInGroundWatered == tileToPlace_groundWatered && allTileMap.tilemap_Planting.GetTile(cellPos) == null)
                         {
-                            allTileMap.tilemap_Planting.SetTile(cellPos, tilebaseCarrot[0]);
-                            Debug.Log("Set tile carrot: " + cellPos);
-                            AddPlantTime(DateTime.Now, ItemType.Carrot, cellPos, DateTime.Now.AddSeconds(10));
-                            mapLoaderManager.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Carrot1));
+                            Plant(cellPos, ItemType.Carrot, 0);
                         }
                         else
                         {
@@ -309,9 +302,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                     case FarmMode.PlantingCorn:
                         if (cellInGroundWatered == tileToPlace_groundWatered && allTileMap.tilemap_Planting.GetTile(cellPos) == null)
                         {
-                            allTileMap.tilemap_Planting.SetTile(cellPos, tileBaseCorn[0]);
-                            AddPlantTime(DateTime.Now, ItemType.Corn, cellPos, DateTime.Now.AddSeconds(10));
-                            mapLoaderManager.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Corn1));
+                            Plant(cellPos, ItemType.Corn, 0);
                         }
                         else
                         {
@@ -322,9 +313,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                     case FarmMode.PlantingRice:
                         if (cellInGroundWatered == tileToPlace_groundWatered && allTileMap.tilemap_Planting.GetTile(cellPos) == null)
                         {
-                            allTileMap.tilemap_Planting.SetTile(cellPos, tilebaseRice[0]);
-                            AddPlantTime(DateTime.Now, ItemType.Rice, cellPos, DateTime.Now.AddSeconds(10));
-                            mapLoaderManager.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Rice1));
+                            Plant(cellPos, ItemType.Rice, 0);
                         }
                         else
                         {
@@ -354,8 +343,56 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
         }
     }
 
+    public void DiggingGround(Vector3Int cellPos, bool isNeedAddToUserMap = true)
+    {
+        Debug.Log("Digging at: " + cellPos);
+        allTileMap.tilemap_Farmable.SetTile(cellPos, tileToPlace_groundDigged);
+        CellData cellData = new CellData(cellPos.x, cellPos.y, CellState.Digged);
+        if (isNeedAddToUserMap)
+            mapLoaderManager.userMap.AddCell(cellData);
+    }
+
+    public void WateringGround(Vector3Int cellPos, bool isNeedToAddToUserMap = true)
+    {
+        allTileMap.tilemap_GroundWatered.SetTile(cellPos, tileToPlace_groundWatered);
+        if (isNeedToAddToUserMap)
+            mapLoaderManager.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Watered));
+    }
+    public void Plant(Vector3Int cellPos, ItemType itemType, int state, bool isNeedAddPlantTime = true, bool isNeddAddUserMap = true)
+    {
+        Debug.Log($"Plant:{itemType} - state:{state}");
+        switch (itemType)
+        {
+            case ItemType.Carrot:
+                allTileMap.tilemap_Planting.SetTile(cellPos, tilebaseCarrot[state]);
+                Debug.Log("Set tile carrot: " + cellPos);
+                if (isNeedAddPlantTime)
+                    AddPlantTime(DateTime.Now, ItemType.Carrot, cellPos, DateTime.Now.AddSeconds(10));
+                if (isNeddAddUserMap)
+                    mapLoaderManager.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Carrot));
+                break;
+            case ItemType.Corn:
+                allTileMap.tilemap_Planting.SetTile(cellPos, tileBaseCorn[state]);
+                Debug.Log("Set tile Corn: " + cellPos);
+                if (isNeedAddPlantTime)
+                    AddPlantTime(DateTime.Now, ItemType.Corn, cellPos, DateTime.Now.AddSeconds(10));
+                if (isNeddAddUserMap)
+                    mapLoaderManager.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Corn));
+                break;
+            case ItemType.Rice:
+                allTileMap.tilemap_Planting.SetTile(cellPos, tilebaseRice[state]);
+                Debug.Log("Set tile rice: " + cellPos);
+                if (isNeedAddPlantTime)
+                    AddPlantTime(DateTime.Now, ItemType.Rice, cellPos, DateTime.Now.AddSeconds(10));
+                if (isNeddAddUserMap)
+                    mapLoaderManager.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Rice));
+                break;
+        }
+        
+    }
     private void Harvest(ItemType itemType, int quantity, Vector3Int cellPos)
     {
+        allTileMap.tilemap_Farmable.SetTile(cellPos, null);
         allTileMap.tilemap_Planting.SetTile(cellPos, null);
         allTileMap.tilemap_GroundWatered.SetTile(cellPos, null);
         ItemInBag item = new ItemInBag(itemType, quantity);
@@ -363,6 +400,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
         // Add item to user bag
         userLoaderManager.userInGame.AddItemToBagAndLoadUI(itemType, quantity);
         //userLoaderManager.userInGame.ShowBag();
+        mapLoaderManager.userMap.SetState(cellPos, CellState.None);
     }
 
 

@@ -104,6 +104,18 @@ public class Map
         return lstCell.Count;
     }
 
+    public void SetState(Vector3Int cellPos, CellState state)
+    {
+        for (int i = 0; i < GetLength(); i++)
+        {
+            if (lstCell[i].x == cellPos.x && lstCell[i].y == cellPos.y)
+            {
+                lstCell[i].cellState = state;
+                return;
+            }
+        }
+    }
+
     public override string ToString()
     {
         return JsonConvert.SerializeObject(this);
