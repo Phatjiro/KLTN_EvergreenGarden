@@ -210,7 +210,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                     Debug.Log("crr: " + crrTileBase.name);
                     TileBase nextTielBase = GetNextPlantTileBase(crrTileBase, itemType);
                     allTileMap.tilemap_Planting.SetTile(plantPos, nextTielBase);
-                    t.nextGrowTime = DateTime.Now.AddSeconds(10);
+                    t.nextGrowTime = DateTime.Now.AddSeconds(20);
                     if (GetNextPlantTileBase(nextTielBase, itemType) == null)
                     {
                         lstIndexRemove.Insert(0, index);
@@ -392,7 +392,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
     }
     private void Harvest(ItemType itemType, int quantity, Vector3Int cellPos)
     {
-        allTileMap.tilemap_Farmable.SetTile(cellPos, null);
+        allTileMap.tilemap_FarmGround.SetTile(cellPos, null);
         allTileMap.tilemap_Planting.SetTile(cellPos, null);
         allTileMap.tilemap_GroundWatered.SetTile(cellPos, null);
         ItemInBag item = new ItemInBag(itemType, quantity);
