@@ -250,6 +250,10 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                             soundButtonManager.PlaySFX(soundButtonManager.digging);
                             DiggingGround(cellPos);
                         }
+                        else
+                        {
+                            ShowNotification("Please dig in the planting area", 3);
+                        }
                         break;
                     case FarmMode.Watering:
                         if (allTileMap.tilemap_Farmable.GetTile(cellPos) == tileToPlace_groundDigged)
