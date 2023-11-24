@@ -30,6 +30,8 @@ public class SellBoardManager : MonoBehaviour
     [SerializeField]
     UserLoaderManager userLoaderManager;
 
+    SoundButtonManager soundButtonManager;
+
     private void Awake()
     {
         buttonMinus.onClick.AddListener(MinusItem);
@@ -41,7 +43,7 @@ public class SellBoardManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        soundButtonManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundButtonManager>();
     }
 
     // Update is called once per frame
@@ -94,11 +96,13 @@ public class SellBoardManager : MonoBehaviour
     {
         if (currentQuantity > 1)
         {
+            soundButtonManager.PlaySFX(soundButtonManager.clickButton);
             currentQuantity -= 1;
             SetUpSellBoard();
         }
         else
         {
+            soundButtonManager.PlaySFX(soundButtonManager.failed);
             NotificationManager.instance.ShowNotification("The quantity of items cannot be less than 1", 4);
             return;
         }
@@ -112,12 +116,14 @@ public class SellBoardManager : MonoBehaviour
             {
                 if (currentQuantity < userLoaderManager.userInGame.userBag.lstItem[i].quantity)
                 {
+                    soundButtonManager.PlaySFX(soundButtonManager.clickButton);
                     currentQuantity += 1;
                     SetUpSellBoard();
                     return;
                 }
                 else
                 {
+                    soundButtonManager.PlaySFX(soundButtonManager.failed);
                     NotificationManager.instance.ShowNotification("Can't sell more items than you own", 4);
                 }
             }
@@ -126,6 +132,7 @@ public class SellBoardManager : MonoBehaviour
 
     public void SubmitItem()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.success);
         Debug.Log("SubmitItem");
         userLoaderManager.userInGame.SellItemAndLoadUI(itemChoose, currentQuantity);
         
@@ -136,6 +143,7 @@ public class SellBoardManager : MonoBehaviour
 
     public void SellAllChooseItem()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.success);
         int quantityOfChooseItem = 0;
         for (int i = 0; i < userLoaderManager.userInGame.userBag.GetLength(); i++)
         {

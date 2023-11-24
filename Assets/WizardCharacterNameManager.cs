@@ -36,9 +36,9 @@ public class WizardCharacterNameManager : MonoBehaviour
 
     public void SetCharacterName()
     {
-        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         if (inputFieldCharacterName.text == "")
         {
+            soundButtonManager.PlaySFX(soundButtonManager.failed);
             string mess = "Nah! Please enter a name";
             inputFieldCharacterName.placeholder.GetComponent<Text>().text = mess;
             if (NotificationManager.instance == null) return;
@@ -46,6 +46,7 @@ public class WizardCharacterNameManager : MonoBehaviour
         }
         else
         {
+            soundButtonManager.PlaySFX(soundButtonManager.success);
             userLoaderManager.SetDisplayName(inputFieldCharacterName.text);
             this.gameObject.SetActive(false);
         }

@@ -47,6 +47,8 @@ public class ToolManager : MonoBehaviour
     [SerializeField]
     GameObject seedBagRice;
 
+    SoundButtonManager soundButtonManager;
+
     private void Awake()
     {
         buttonDigging.onClick.AddListener(ActiveDigging);
@@ -78,6 +80,11 @@ public class ToolManager : MonoBehaviour
             seedBagRice,
             glovesRight,
         };
+    }
+
+    private void Start()
+    {
+        soundButtonManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundButtonManager>();
     }
 
     private void ActiveDigging()
@@ -131,6 +138,7 @@ public class ToolManager : MonoBehaviour
 
     private void ActiveButtonByIndex(int index, bool isActive, FarmMode modeActive)
     {
+        soundButtonManager.PlaySFX(soundButtonManager.select_item);
         for (int i = 0; i < allButtons.Count; i++)
         {
             if (i == index)

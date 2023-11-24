@@ -22,6 +22,13 @@ public class SoundButtonManager : MonoBehaviour
     [SerializeField]
     AudioSource sfxSource;
     public AudioClip clickButton;
+    public AudioClip success;
+    public AudioClip failed;
+    public AudioClip select_item;
+    public AudioClip digging;
+    public AudioClip watering;
+    public AudioClip planting;
+    public AudioClip picking_up_plant;
 
     private void Awake()
     {

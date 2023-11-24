@@ -116,14 +116,15 @@ public class CartManager : MonoBehaviour
 
     public void MinusItem()
     {
-        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         if (currentQuantity > 1)
         {
+            soundButtonManager.PlaySFX(soundButtonManager.clickButton);
             currentQuantity -= 1;
             SetUpSellBoard();
         }
         else
         {
+            soundButtonManager.PlaySFX(soundButtonManager.failed);
             NotificationManager.instance.ShowNotification("The quantity of items cannot be less than 1", 4);
             return;
         }
@@ -143,16 +144,19 @@ public class CartManager : MonoBehaviour
         // Check user money
         if (userLoaderManager.userInGame.gold < int.Parse(textTotal.text))
         {
+            soundButtonManager.PlaySFX(soundButtonManager.failed);
             NotificationManager.instance.ShowNotification("You don't have engough money to buy item", 3);
         }
         else
         {
             if (userLoaderManager.userInGame.gold < int.Parse(textTotal.text))
             {
+                soundButtonManager.PlaySFX(soundButtonManager.failed);
                 NotificationManager.instance.ShowNotification("You don't have engough money to buy item", 3);
             }
             else
             {
+                soundButtonManager.PlaySFX(soundButtonManager.success);
                 switch (shopItemType)
                 {
                     case ShopItemType.Seeds:
