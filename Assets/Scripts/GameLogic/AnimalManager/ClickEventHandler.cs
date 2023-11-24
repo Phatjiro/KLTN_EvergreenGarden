@@ -30,7 +30,7 @@ public class ClickEventHandler : MonoBehaviour
             Animal infor = this.GetComponent<AnimalLivingInformation>().information;
 
             animalInfor.gameObject.SetActive(true);
-            animalInfor.loadAnimalInfor(infor);
+            animalInfor.loadAnimalInfor(infor, this.gameObject);
         }
 
     }
