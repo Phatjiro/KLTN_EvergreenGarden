@@ -58,6 +58,8 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
     [SerializeField]
     AllTileMap allTileMap;
     [SerializeField]
+    TileBase tileToPlace_baseFarmableGround;
+    [SerializeField]
     TileBase tileToPlace_groundDigged;
     [SerializeField]
     TileBase tileToPlace_groundWatered;
@@ -382,7 +384,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
     }
     private void Harvest(ItemType itemType, int quantity, Vector3Int cellPos)
     {
-        allTileMap.tilemap_FarmGround.SetTile(cellPos, null);
+        allTileMap.tilemap_Farmable.SetTile(cellPos, tileToPlace_baseFarmableGround);
         allTileMap.tilemap_Planting.SetTile(cellPos, null);
         allTileMap.tilemap_GroundWatered.SetTile(cellPos, null);
         ItemInBag item = new ItemInBag(itemType, quantity);
