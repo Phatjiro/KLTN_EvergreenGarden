@@ -72,6 +72,7 @@ public class ShopManager : MonoBehaviour
 
     public void ActiveWizard()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         if (shopObject.activeSelf != true && TestBag.IsShowing() != true && seedShopObject.activeSelf != true && animalShopObject.activeSelf != true)
         {
             wizardShop.SetActive(true);

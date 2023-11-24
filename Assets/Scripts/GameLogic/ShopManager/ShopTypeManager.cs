@@ -23,6 +23,8 @@ public class ShopTypeManager : MonoBehaviour
     [SerializeField]
     GameObject animalShopObject;
 
+    SoundButtonManager soundButtonManager;
+
     private void Awake()
     {
         buttonSeedShop.onClick.AddListener(LoadToSeedShop);
@@ -32,7 +34,7 @@ public class ShopTypeManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        soundButtonManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundButtonManager>();
     }
 
     // Update is called once per frame
@@ -43,6 +45,7 @@ public class ShopTypeManager : MonoBehaviour
 
     public void LoadToSeedShop()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         crrItemType = ShopItemType.Seeds;
         shopTypeObject.SetActive(false);
         seedShopObject.SetActive(true);
@@ -50,6 +53,7 @@ public class ShopTypeManager : MonoBehaviour
 
     public void LoadToAnimalShop()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         crrItemType = ShopItemType.Animals;
         shopTypeObject.SetActive(false);
         animalShopObject.SetActive(true);

@@ -116,6 +116,7 @@ public class CartManager : MonoBehaviour
 
     public void MinusItem()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         if (currentQuantity > 1)
         {
             currentQuantity -= 1;
@@ -130,6 +131,7 @@ public class CartManager : MonoBehaviour
 
     public void PlusItem()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         currentQuantity += 1;
         SetUpSellBoard();
     }
