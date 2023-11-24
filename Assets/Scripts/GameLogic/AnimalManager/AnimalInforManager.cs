@@ -64,10 +64,12 @@ public class AnimalInforManager : MonoBehaviour
 
     public void loadAnimalInfor(Animal animal)
     {
+        btnSell.interactable = false;
         this.crrAnimal = animal;
         txtanimalName.text = animal.name;
         txtBuyPrice.text = animal.buyPrice.ToString();
         txtSellPrice.text = animal.sellPrice.ToString();
+        Debug.Log("Load animal: " + animal.ToString());
         double crrTimePass = DateTime.Now.Subtract(animal.buyTime).TotalSeconds;
         float crrPercent = (float)crrTimePass / animal.timeGrowsUp;
         loading.SetPercent(crrPercent);
