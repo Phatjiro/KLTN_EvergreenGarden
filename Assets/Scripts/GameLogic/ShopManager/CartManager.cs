@@ -40,6 +40,9 @@ public class CartManager : MonoBehaviour
     [SerializeField]
     Sprite spriteCow;
 
+    [SerializeField]
+    SoundButtonManager soundButtonManager;
+
     private void Awake()
     {
         buttonMinus.onClick.AddListener(MinusItem);
@@ -53,7 +56,6 @@ public class CartManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
     }
 
     // Update is called once per frame
@@ -105,6 +107,7 @@ public class CartManager : MonoBehaviour
 
     public void OpenCart(ItemType item)
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         itemChoose = item;
         currentQuantity = 1;
         gameObject.SetActive(true);

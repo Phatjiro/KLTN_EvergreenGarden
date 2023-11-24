@@ -15,6 +15,9 @@ public class MenuManager : MonoBehaviour
     [SerializeField]
     Button buttonChangeAccount;
 
+    [SerializeField]
+    SoundButtonManager soundButtonManager;
+
     void Awake()
     {
         // Ontap button
@@ -42,6 +45,7 @@ public class MenuManager : MonoBehaviour
 
     private void ChangeAccount()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         try
         {
             // Sign out from FirebaseAuth

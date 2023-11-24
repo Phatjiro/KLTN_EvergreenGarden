@@ -15,9 +15,13 @@ public class AnimalShopManager : MonoBehaviour
     [SerializeField]
     GameObject cartObject;
 
+    SoundButtonManager soundButtonManager;
+
     // Start is called before the first frame update
     void Start()
     {
+        soundButtonManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundButtonManager>();
+
         buttonChicken.onClick.AddListener(() =>
         {
             cartObject.GetComponent<CartManager>().OpenCart(ItemType.Chicken);
@@ -44,6 +48,7 @@ public class AnimalShopManager : MonoBehaviour
 
     public void ExitSeedShop()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         gameObject.SetActive(false);
         if (cartObject.activeSelf == true)
         {

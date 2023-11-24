@@ -55,6 +55,10 @@ public class LoginManager : MonoBehaviour
     [SerializeField]
     FirebaseWriteData firebaseWriteData;
 
+    // Effect Sound
+    [SerializeField]
+    SoundButtonManager soundButtonManager;
+
     private void Awake()
     {
         // Ontap button
@@ -102,6 +106,7 @@ public class LoginManager : MonoBehaviour
 
     public void SignInWithGoogle()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         GoogleSignIn.DefaultInstance.SignIn().ContinueWith(task =>
         {
             if (task.IsFaulted)
@@ -174,6 +179,7 @@ public class LoginManager : MonoBehaviour
 
     public void SignInWithEmailPassword()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         string email = inputFieldEmail.text;
         string password = inputFieldPassword.text;
 
@@ -231,7 +237,8 @@ public class LoginManager : MonoBehaviour
     }
 
     public void RegisterWithEmailPassword()
-    { 
+    {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         string email = inputFieldRegisterEmail.text;
         string password = inputFieldRegisterPassword.text;
         string confirmPassword = inputFieldConfirmPassword.text;
@@ -316,6 +323,7 @@ public class LoginManager : MonoBehaviour
 
     public void SwitchLoginRegisterForm()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         loginForm.SetActive(!loginForm.activeSelf);
         registerForm.SetActive(!registerForm.activeSelf);
 

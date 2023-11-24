@@ -21,6 +21,8 @@ public class TestBag : MonoBehaviour
 
     private static bool isShowing = false;
 
+    SoundButtonManager soundButtonManager;
+
     private void Awake()
     {
         buttonBag.onClick.AddListener(TurnOnOffBag);
@@ -34,6 +36,7 @@ public class TestBag : MonoBehaviour
 
     private void Start()
     {
+        soundButtonManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundButtonManager>();
         Debug.Log("Intance BagUIManager");
         _instance = this;
     }
@@ -47,6 +50,7 @@ public class TestBag : MonoBehaviour
 
     public void CloseBag()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         isShowing = false;
         this.GetComponent<RectTransform>().DOAnchorPosY(1000, 0.5f);
     }
@@ -58,6 +62,7 @@ public class TestBag : MonoBehaviour
 
     public void TurnOnOffBag()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         if (isShowing)
             CloseBag();
         else

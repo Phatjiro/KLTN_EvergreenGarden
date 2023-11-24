@@ -12,10 +12,18 @@ public class WizardCharacterNameManager : MonoBehaviour
     [SerializeField]
     UserLoaderManager userLoaderManager;
 
+    SoundButtonManager soundButtonManager;
+
     private void Awake()
     {
         buttonSubmit.onClick.AddListener(SetCharacterName);
     }
+
+    private void Start()
+    {
+        soundButtonManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundButtonManager>();
+    }
+
     private void OnEnable()
     {
         CharacterActionController.isAllowToMove = false;
@@ -28,6 +36,7 @@ public class WizardCharacterNameManager : MonoBehaviour
 
     public void SetCharacterName()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         if (inputFieldCharacterName.text == "")
         {
             string mess = "Nah! Please enter a name";

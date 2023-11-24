@@ -23,6 +23,8 @@ public class MenuInGame : MonoBehaviour
     [SerializeField]
     Button buttonQuit;
 
+    SoundButtonManager soundButtonManager;
+
     private void Awake()
     {
         buttonMenu.onClick.AddListener(ShowMenuManager);
@@ -35,7 +37,7 @@ public class MenuInGame : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        soundButtonManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundButtonManager>();
     }
 
     // Update is called once per frame
@@ -46,11 +48,13 @@ public class MenuInGame : MonoBehaviour
 
     public void ShowMenuManager()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         menuObject.SetActive(!menuObject.activeSelf);
     }
 
     public void ExitMenuManager()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         if (settingsObject != null && settingsObject.activeSelf == true)
         { 
             settingsObject.SetActive(false);
@@ -66,6 +70,7 @@ public class MenuInGame : MonoBehaviour
 
     public void ShowMenuSettings()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         settingsObject.SetActive(true);
     }
 

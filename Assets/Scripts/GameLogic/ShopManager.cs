@@ -27,6 +27,8 @@ public class ShopManager : MonoBehaviour
     [SerializeField]
     GameObject animalShopObject;
 
+    SoundButtonManager soundButtonManager;
+
     private void Awake()
     {
         buttonWizardPurchase.onClick.AddListener(ActiveShop);
@@ -38,6 +40,7 @@ public class ShopManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        soundButtonManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundButtonManager>();
     }
 
     // Update is called once per frame
@@ -82,6 +85,7 @@ public class ShopManager : MonoBehaviour
 
     public void ActiveShop()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         Debug.Log("Active shop");
         wizardShop.SetActive(false);
         shopObject.SetActive(true);
@@ -89,11 +93,13 @@ public class ShopManager : MonoBehaviour
 
     public void ExitShop()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         shopObject.SetActive(false);
     }
 
     public void ActiveSellBag()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         wizardShop.SetActive(false);
         bagObject.SetActive(true);
         MoveSellBag(-320);
