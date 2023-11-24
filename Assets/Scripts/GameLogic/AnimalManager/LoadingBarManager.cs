@@ -24,7 +24,7 @@ public class LoadingBarManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        LoadingInTime(30);
+        //LoadingInTime(30);
     }
 
     // Update is called once per frame

@@ -92,4 +92,13 @@ public class BredAnimalDBManager : MonoBehaviour, ReadDataCallback
         Debug.Log("Convert Json to List Animal" + data);
         animalManager.LoadAnimal(lstCurrentBredAnimal);
     }
+
+    public void RemoveAnimal(Animal rmAnimal)
+    {
+        Debug.Log("start remove");
+
+        lstCurrentBredAnimal.Remove(rmAnimal);
+
+        Debug.Log("remove sucesses");
+    }
 }

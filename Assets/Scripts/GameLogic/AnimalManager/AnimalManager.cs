@@ -115,7 +115,7 @@ public class AnimalManager : MonoBehaviour
     {
         this.GetComponent<UnityMainThreadDispatcher>().Enqueue(() =>
         {
-            GameObject go = Instantiate(chickenPrefab);
+            GameObject go = Instantiate(cowPrefab);
             float randomX = UnityEngine.Random.Range(-4, 4);
             float randomY = UnityEngine.Random.Range(-3, 3);
             go.transform.position = positionCow.transform.position + new Vector3(randomX, randomY, 0);
