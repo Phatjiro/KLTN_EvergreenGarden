@@ -19,9 +19,6 @@ public class AnimalManager : MonoBehaviour
     private BoxCollider2D boxColliderChicken;
 
     [SerializeField]
-    private Button BtnBuyChicken;
-
-    [SerializeField]
     private BredAnimalDBManager bredAnimalDBManager;
 
     private FirebaseUser firebaseUser;
@@ -30,9 +27,7 @@ public class AnimalManager : MonoBehaviour
     [SerializeField]
     private GameObject positionPiggy;
     [SerializeField]
-    private BoxCollider2D boxColliderPiggy;
-    [SerializeField]
-    private Button BtnBuyPiggy;   
+    private BoxCollider2D boxColliderPiggy;  
     
     [SerializeField]
     private GameObject cowPrefab;
@@ -40,20 +35,10 @@ public class AnimalManager : MonoBehaviour
     private GameObject positionCow;
     [SerializeField]
     private BoxCollider2D boxColliderCow;
-    [SerializeField]
-    private Button btnBuyCow;
 
   
-
-
-
-
     private void Awake()
     {
-
-        BtnBuyChicken.onClick.AddListener(InstanceNewChicken);
-        BtnBuyPiggy.onClick.AddListener(InstanceNewPiggy);
-        btnBuyCow.onClick.AddListener(InstanceNewCow);
 
     }
 
@@ -168,7 +153,4 @@ public class AnimalManager : MonoBehaviour
             }
         }
     }
-
-
-
 }

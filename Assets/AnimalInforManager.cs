@@ -1,7 +1,5 @@
 using Newtonsoft.Json;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,7 +25,7 @@ public class AnimalInforManager : MonoBehaviour
     [SerializeField]
     Sprite carrotImage;
     [SerializeField]
-    Sprite corImage;
+    Sprite cornImage;
     [SerializeField]
     Sprite riceImage;
 
@@ -52,7 +50,7 @@ public class AnimalInforManager : MonoBehaviour
     [SerializeField]
     FirebaseWriteData firebaseWriteData;
 
-    //private bool isFeeded = false;
+    SoundButtonManager soundButtonManager;
 
     private void Awake()
     {
@@ -60,16 +58,18 @@ public class AnimalInforManager : MonoBehaviour
         btnSell.onClick.AddListener(SellAnimal);
         btnFeed.onClick.AddListener(FeedAnimal);
         btnSkip.onClick.AddListener(SkipAnimal);
-
     }
 
     private void SkipAnimal()
     {
         if (userLoaderManager.userInGame.diamond <= 0)
         {
+            soundButtonManager.PlaySFX(soundButtonManager.failed);
             NotificationManager.instance.ShowNotification("You don't have enoungh skiping fee", 3);
-        } else
+        } 
+        else
         {
+            soundButtonManager.PlaySFX(soundButtonManager.success);
             userLoaderManager.userInGame.diamond -= 1;
             firebaseWriteData.WriteData("Users/" + userLoaderManager.userInGame.id, userLoaderManager.userInGame.ToString());
             crrAnimal.timeGrowsUp = 1;
@@ -91,12 +91,12 @@ public class AnimalInforManager : MonoBehaviour
                         firebaseWriteData.WriteData("Users/" + userLoaderManager.userInGame.id, userLoaderManager.userInGame.ToString());
                         crrAnimal.timeGrowsUp /= 2;
                         btnFeed.interactable = false;
-
+                        soundButtonManager.PlaySFX(soundButtonManager.success);
                     }
                     else 
                     {
                         NotificationManager.instance.ShowNotification("You don't have enoungh feeding fee",3);
-
+                        soundButtonManager.PlaySFX(soundButtonManager.failed);
                     }
                     break;
                 }
@@ -108,12 +108,12 @@ public class AnimalInforManager : MonoBehaviour
                         firebaseWriteData.WriteData("Users/" + userLoaderManager.userInGame.id, userLoaderManager.userInGame.ToString());
                         crrAnimal.timeGrowsUp /= 2;
                         btnFeed.interactable = false;
-
+                        soundButtonManager.PlaySFX(soundButtonManager.success);
                     }
                     else
                     {
                         NotificationManager.instance.ShowNotification("You don't have enoungh feeding fee", 3);
-
+                        soundButtonManager.PlaySFX(soundButtonManager.failed);
                     }
 
                     break;
@@ -126,12 +126,12 @@ public class AnimalInforManager : MonoBehaviour
                         firebaseWriteData.WriteData("Users/" + userLoaderManager.userInGame.id, userLoaderManager.userInGame.ToString());
                         crrAnimal.timeGrowsUp /= 2;
                         btnFeed.interactable = false;
-
+                        soundButtonManager.PlaySFX(soundButtonManager.success);
                     }
                     else
                     {
                         NotificationManager.instance.ShowNotification("You don't have enoungh feeding fee", 3);
-
+                        soundButtonManager.PlaySFX(soundButtonManager.failed);
                     }
 
                     break;
@@ -143,7 +143,8 @@ public class AnimalInforManager : MonoBehaviour
 
     public void SellAnimal()
     {
-        
+        soundButtonManager.PlaySFX(soundButtonManager.success);
+
         userLoaderManager.userInGame.gold += crrAnimal.sellPrice;
         
         bredAnimalDBManager.RemoveAnimal(crrAnimal);
@@ -159,13 +160,17 @@ public class AnimalInforManager : MonoBehaviour
 
     private void disableUI()
     {
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         gameObject.SetActive(false);
     }
+
     // Start is called before the first frame update
     void Start()
     {
+        soundButtonManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundButtonManager>();
         btnSell.interactable = false;
     }
+
     private void OnDisable()
     {
         isLoading = false;
@@ -220,7 +225,7 @@ public class AnimalInforManager : MonoBehaviour
                 }
             case "Cow":
                 {
-                    imageItemFeeding.sprite = corImage;
+                    imageItemFeeding.sprite = cornImage;
                     if (animal.timeGrowsUp == 50) btnFeed.interactable = false;
                     break;
                 }
