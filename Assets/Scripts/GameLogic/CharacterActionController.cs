@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class CharacterActionController : MonoBehaviour
@@ -40,6 +41,7 @@ public class CharacterActionController : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray);
 
+            //Debug.Log("Hit: " + hit.collider.gameObject.name, hit.collider.gameObject);
             if (hit.collider != null && hit.collider.gameObject.tag == "Tilemap")
             {
                 Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -61,7 +63,6 @@ public class CharacterActionController : MonoBehaviour
 
             // Distance user can move in every deltaTime
             float distance = speed * Time.deltaTime;
-
             // If distance user must go bigger (>) distance user can go in delta time -> user must keep going
             if (direction.magnitude > distance)
             {
@@ -86,8 +87,7 @@ public class CharacterActionController : MonoBehaviour
             m_Animator.SetFloat(m_SpeedHash, 0);
         }
     }
-
-
+  
     void SetLookDirectionFrom(Vector2 direction)
     {
         if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
@@ -98,5 +98,10 @@ public class CharacterActionController : MonoBehaviour
         {
             m_CurrentLookDirection = direction.y > 0 ? Vector2.up : Vector2.down;
         }
+    }
+
+    public void DoAnimation(string name)
+    {
+        m_Animator.SetTrigger(name);
     }
 }

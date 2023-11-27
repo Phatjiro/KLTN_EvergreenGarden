@@ -247,6 +247,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                     case FarmMode.Digging:
                         if (allTileMap.tilemap_Farmable.GetTile(cellPos) != null)
                         {
+                            this.GetComponent<CharacterActionController>().DoAnimation("Picking");
                             soundButtonManager.PlaySFX(soundButtonManager.digging);
                             DiggingGround(cellPos);
                         }
@@ -258,6 +259,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                     case FarmMode.Watering:
                         if (allTileMap.tilemap_Farmable.GetTile(cellPos) == tileToPlace_groundDigged)
                         {
+                            this.GetComponent<CharacterActionController>().DoAnimation("Watering");
                             soundButtonManager.PlaySFX(soundButtonManager.watering);
                             WateringGround(cellPos);
                         }
@@ -281,6 +283,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                     case FarmMode.PlantingCarrot:
                         if (cellInGroundWatered == tileToPlace_groundWatered && allTileMap.tilemap_Planting.GetTile(cellPos) == null)
                         {
+                            this.GetComponent<CharacterActionController>().DoAnimation("Planting");
                             soundButtonManager.PlaySFX(soundButtonManager.planting);
                             Plant(cellPos, ItemType.Carrot, 0);
                         }
@@ -293,6 +296,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                     case FarmMode.PlantingCorn:
                         if (cellInGroundWatered == tileToPlace_groundWatered && allTileMap.tilemap_Planting.GetTile(cellPos) == null)
                         {
+                            this.GetComponent<CharacterActionController>().DoAnimation("Planting");
                             soundButtonManager.PlaySFX(soundButtonManager.planting);
                             Plant(cellPos, ItemType.Corn, 0);
                         }
@@ -305,6 +309,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                     case FarmMode.PlantingRice:
                         if (cellInGroundWatered == tileToPlace_groundWatered && allTileMap.tilemap_Planting.GetTile(cellPos) == null)
                         {
+                            this.GetComponent<CharacterActionController>().DoAnimation("Planting");
                             soundButtonManager.PlaySFX(soundButtonManager.planting);
                             Plant(cellPos, ItemType.Rice, 0);
                         }
@@ -317,16 +322,19 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                     case FarmMode.Gloving:
                         if (cellInPlanting == tilebaseCarrot[3])
                         {
+                            this.GetComponent<CharacterActionController>().DoAnimation("Picking");
                             soundButtonManager.PlaySFX(soundButtonManager.picking_up_plant);
                             Harvest(itemType: ItemType.Carrot, quantity: 1, cellPos);
                         }
                         if (cellInPlanting == tileBaseCorn[3])
                         {
+                            this.GetComponent<CharacterActionController>().DoAnimation("Picking");
                             soundButtonManager.PlaySFX(soundButtonManager.picking_up_plant);
                             Harvest(itemType: ItemType.Corn, quantity: 1, cellPos);
                         }
                         if (cellInPlanting == tilebaseRice[3])
                         {
+                            this.GetComponent<CharacterActionController>().DoAnimation("Picking");
                             soundButtonManager.PlaySFX(soundButtonManager.picking_up_plant);
                             Harvest(itemType: ItemType.Rice, quantity: 1, cellPos);
                         }
