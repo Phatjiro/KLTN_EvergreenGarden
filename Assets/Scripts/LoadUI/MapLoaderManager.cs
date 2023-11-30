@@ -2,6 +2,7 @@ using Firebase.Auth;
 using Firebase.Database;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -217,5 +218,10 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
     public void OnReadDataAnimalCompleted(string data)
     {
        
+    }
+
+    public void OnReadDataAllUserCompleted(List<string> data)
+    { 
+        
     }
 }

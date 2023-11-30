@@ -3,6 +3,7 @@ using Firebase.Database;
 using Newtonsoft.Json;
 using PimDeWitte.UnityMainThreadDispatcher;
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,6 +31,11 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
     GameObject wizardCharacterName;
 
     Boolean isLoadFirstTime = true;
+
+    [SerializeField]
+    Text textCharacterNameInFriendList;
+    [SerializeField]
+    Text textUIDInFriendList;
 
     private void Awake()
     {
@@ -74,6 +80,8 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
         if (isLoadFirstTime)
         {
             isLoadFirstTime = false;
+            textCharacterNameInFriendList.text = "YOUR NAME: " + userInGame.characterName.ToString();
+            textUIDInFriendList.text = "YOUR UID: " + userInGame.id.ToString();
             BagItemLoader loader = BagItemLoader.instance;
             if (loader != null)
             {
@@ -111,6 +119,11 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
 	}
 
     public void OnReadDataAnimalCompleted(string data)
+    {
+        return;
+    }
+
+    public void OnReadDataAllUserCompleted(List<string> data)
     {
         
     }

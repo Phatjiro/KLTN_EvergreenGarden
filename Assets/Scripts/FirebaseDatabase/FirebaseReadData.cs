@@ -1,12 +1,14 @@
 using Firebase;
 using Firebase.Database;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum ReadDataType
 {
     Map,
     User,
-    Animal
+    Animal,
+    AllUser
 }
 
 public class FirebaseReadData : MonoBehaviour
@@ -37,16 +39,26 @@ public class FirebaseReadData : MonoBehaviour
                         switch (dataType)
                         {
                             case ReadDataType.Map:
+                                Debug.Log("Call date Maps");
                                 callback.OnReadDataMapCompleted(json);
                                 break;
                             case ReadDataType.User:
-                                Debug.Log("Call data user");
+                                Debug.Log("Call data Users");
                                 callback.OnReadDataUserCompleted(json);
                                 break;
                             case ReadDataType.Animal:
-                                Debug.Log("Call data Animal");
+                                Debug.Log("Call data Animals");
                                 callback.OnReadDataAnimalCompleted(json);
                                 break;
+                            case ReadDataType.AllUser:
+                                List<string> allUsers = new List<string>();
+                                foreach (DataSnapshot ds in task.Result.Children)
+                                {
+                                    string user = ds.Value.ToString();
+                                    allUsers.Add(user);
+                                }
+                                callback.OnReadDataAllUserCompleted(allUsers);
+                    break;
                             default:
                                 break;
                         }

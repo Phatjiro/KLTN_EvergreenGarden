@@ -28,7 +28,7 @@ public class CharacterActionController : MonoBehaviour
     void Update()
     {
         if (!isAllowToMove) return;
-        
+
         // Don't move if more 2 touch in screen (it maybe the user zoom in or out)
         if (Input.touchCount >= 2) return;
         // Left mouse

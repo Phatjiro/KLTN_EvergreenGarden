@@ -46,24 +46,19 @@ public class ShopManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.touchCount > 0)
+        if (Input.GetMouseButtonDown(0))
         {
-            Touch touch = Input.GetTouch(0);
-            // User touch on screen
-            if (touch.phase == TouchPhase.Began)
-            {
-                if (EventButtonManager.GetIsClickingButton()) return;
+            if (EventButtonManager.GetIsClickingButton()) return;
 
-                // Use ray to check if user click on Shop
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(ray);
-                foreach (var hit in hits)
+            // Use ray to check if user click on Shop
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D[] hits = Physics2D.GetRayIntersectionAll(ray);
+            foreach (var hit in hits)
+            {
+                if (hit.collider != null && hit.collider.gameObject.tag == "Shop")
                 {
-                    if (hit.collider != null && hit.collider.gameObject.tag == "Shop")
-                    {
-                        ActiveWizard();
-                        break;
-                    }
+                    ActiveWizard();
+                    break;
                 }
             }
         }    

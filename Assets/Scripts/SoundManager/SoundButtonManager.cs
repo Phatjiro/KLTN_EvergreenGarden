@@ -76,7 +76,8 @@ public class SoundButtonManager : MonoBehaviour
     {
         if (isMusicEnabled) 
         {
-            sfxSource.PlayOneShot(clip);
+            sfxSource.clip = clip;
+            sfxSource.Play();
         }
     }
 }

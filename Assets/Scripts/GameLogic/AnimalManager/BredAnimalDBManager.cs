@@ -101,4 +101,9 @@ public class BredAnimalDBManager : MonoBehaviour, ReadDataCallback
 
         Debug.Log("remove sucesses");
     }
+
+    public void OnReadDataAllUserCompleted(List<string> data)
+    {
+        
+    }
 }

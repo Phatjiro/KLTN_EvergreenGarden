@@ -8,9 +8,11 @@ using UnityEngine.UI;
 public interface ReadDataCallback
 {
     public void OnReadDataMapCompleted(string data);
-    public void OnReadDataUserCompleted(string data); 
+    public void OnReadDataUserCompleted(string data);
 
-    public void OnReadDataAnimalCompleted(String data);
+    public void OnReadDataAnimalCompleted(string data);
+
+    public void OnReadDataAllUserCompleted(List<string> data);
 }
 
 public enum FarmMode
@@ -101,15 +103,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
 
     private void Awake()
     {
-        // Init Map and User
-        //userInGame = new User();
         lstPlantedTime = new List<PlantTimeInformation>();
-
-//#if !UNITY_EDITOR
-//        // Get user already login
-//        firebaseUser = FirebaseAuth.DefaultInstance.CurrentUser;
-//        Debug.Log(firebaseUser.UserId + " - " + firebaseUser.DisplayName);
-//#endif
     }
 
     // Start is called before the first frame update
@@ -224,125 +218,120 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
 
         // Change the tilemap when click button
         // Action for farmer to build his farm
-        if (Input.touchCount == 1)
+        if (Input.GetMouseButton(0))
         {
-            Touch touch = Input.GetTouch(0);
+            Vector3 touchWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3Int cellPos = allTileMap.tilemap_FarmGround.WorldToCell(touchWorldPos);
 
-            if (touch.phase == TouchPhase.Began)
+            // Get cell in other tilemap
+            var cellInFarmGround = allTileMap.tilemap_FarmGround.GetTile(cellPos);
+            var cellInGroundWatered = allTileMap.tilemap_GroundWatered.GetTile(cellPos);
+            var cellInPlanting = allTileMap.tilemap_Planting.GetTile(cellPos);
+
+            // SwitchCase to active mode
+            switch (currentMode)
             {
-                Vector3 touchWorldPos = Camera.main.ScreenToWorldPoint(touch.position);
-                Vector3Int cellPos = allTileMap.tilemap_FarmGround.WorldToCell(touchWorldPos);
+                case FarmMode.None:
+                    break;
 
-                // Get cell in other tilemap
-                var cellInFarmGround = allTileMap.tilemap_FarmGround.GetTile(cellPos);
-                var cellInGroundWatered = allTileMap.tilemap_GroundWatered.GetTile(cellPos);
-                var cellInPlanting = allTileMap.tilemap_Planting.GetTile(cellPos);
+                case FarmMode.Digging:
+                    if (allTileMap.tilemap_Farmable.GetTile(cellPos) != null)
+                    {
+                        this.GetComponent<CharacterActionController>().DoAnimation("Picking");
+                        soundButtonManager.PlaySFX(soundButtonManager.digging);
+                        DiggingGround(cellPos);
+                    }
+                    else
+                    {
+                        ShowNotification("Please dig in the planting area", 3);
+                    }
+                    break;
+                case FarmMode.Watering:
+                    if (allTileMap.tilemap_Farmable.GetTile(cellPos) == tileToPlace_groundDigged)
+                    {
+                        this.GetComponent<CharacterActionController>().DoAnimation("Watering");
+                        soundButtonManager.PlaySFX(soundButtonManager.watering);
+                        WateringGround(cellPos);
+                    }
+                    else
+                    {
+                        ShowNotification("Please water the dug soil bed", 2);
+                    }
+                    break;
 
-                // SwitchCase to active mode
-                switch (currentMode)
-                {
-                    case FarmMode.None:
-                        break;
+                case FarmMode.PlantingGrass:
+                    if (cellInGroundWatered == tileToPlace_groundWatered)
+                    {
+                        allTileMap.tilemap_GroundWatered.SetTile(cellPos, null);
+                    }
+                    if (cellInFarmGround == tileToPlace_groundDigged)
+                    {
+                        allTileMap.tilemap_FarmGround.SetTile(cellPos, null);
+                    }
+                    break;
 
-                    case FarmMode.Digging:
-                        if (allTileMap.tilemap_Farmable.GetTile(cellPos) != null)
-                        {
-                            this.GetComponent<CharacterActionController>().DoAnimation("Picking");
-                            soundButtonManager.PlaySFX(soundButtonManager.digging);
-                            DiggingGround(cellPos);
-                        }
-                        else
-                        {
-                            ShowNotification("Please dig in the planting area", 3);
-                        }
-                        break;
-                    case FarmMode.Watering:
-                        if (allTileMap.tilemap_Farmable.GetTile(cellPos) == tileToPlace_groundDigged)
-                        {
-                            this.GetComponent<CharacterActionController>().DoAnimation("Watering");
-                            soundButtonManager.PlaySFX(soundButtonManager.watering);
-                            WateringGround(cellPos);
-                        }
-                        else
-                        {
-                            ShowNotification("Please water the dug soil bed", 2);
-                        }
-                        break;
+                case FarmMode.PlantingCarrot:
+                    if (cellInGroundWatered == tileToPlace_groundWatered && allTileMap.tilemap_Planting.GetTile(cellPos) == null)
+                    {
+                        this.GetComponent<CharacterActionController>().DoAnimation("Planting");
+                        soundButtonManager.PlaySFX(soundButtonManager.planting);
+                        Plant(cellPos, ItemType.Carrot, 0);
+                    }
+                    else
+                    {
+                        ShowNotification("Please plant the dug wattered bed", 2);
+                    }
+                    break;
 
-                    case FarmMode.PlantingGrass:
-                        if (cellInGroundWatered == tileToPlace_groundWatered)
-                        {
-                            allTileMap.tilemap_GroundWatered.SetTile(cellPos, null);
-                        }
-                        if (cellInFarmGround == tileToPlace_groundDigged)
-                        {
-                            allTileMap.tilemap_FarmGround.SetTile(cellPos, null);
-                        }
-                        break;
+                case FarmMode.PlantingCorn:
+                    if (cellInGroundWatered == tileToPlace_groundWatered && allTileMap.tilemap_Planting.GetTile(cellPos) == null)
+                    {
+                        this.GetComponent<CharacterActionController>().DoAnimation("Planting");
+                        soundButtonManager.PlaySFX(soundButtonManager.planting);
+                        Plant(cellPos, ItemType.Corn, 0);
+                    }
+                    else
+                    {
+                        ShowNotification("Please plant the dug wattered bed", 2);
+                    }
+                    break;
 
-                    case FarmMode.PlantingCarrot:
-                        if (cellInGroundWatered == tileToPlace_groundWatered && allTileMap.tilemap_Planting.GetTile(cellPos) == null)
-                        {
-                            this.GetComponent<CharacterActionController>().DoAnimation("Planting");
-                            soundButtonManager.PlaySFX(soundButtonManager.planting);
-                            Plant(cellPos, ItemType.Carrot, 0);
-                        }
-                        else
-                        {
-                            ShowNotification("Please plant the dug wattered bed", 2);
-                        }
-                        break;
+                case FarmMode.PlantingRice:
+                    if (cellInGroundWatered == tileToPlace_groundWatered && allTileMap.tilemap_Planting.GetTile(cellPos) == null)
+                    {
+                        this.GetComponent<CharacterActionController>().DoAnimation("Planting");
+                        soundButtonManager.PlaySFX(soundButtonManager.planting);
+                        Plant(cellPos, ItemType.Rice, 0);
+                    }
+                    else
+                    {
+                        ShowNotification("Please plant the dug wattered bed", 2);
+                    }
+                    break;
 
-                    case FarmMode.PlantingCorn:
-                        if (cellInGroundWatered == tileToPlace_groundWatered && allTileMap.tilemap_Planting.GetTile(cellPos) == null)
-                        {
-                            this.GetComponent<CharacterActionController>().DoAnimation("Planting");
-                            soundButtonManager.PlaySFX(soundButtonManager.planting);
-                            Plant(cellPos, ItemType.Corn, 0);
-                        }
-                        else
-                        {
-                            ShowNotification("Please plant the dug wattered bed", 2);
-                        }
-                        break;
+                case FarmMode.Gloving:
+                    if (cellInPlanting == tilebaseCarrot[3])
+                    {
+                        this.GetComponent<CharacterActionController>().DoAnimation("Picking");
+                        soundButtonManager.PlaySFX(soundButtonManager.picking_up_plant);
+                        Harvest(itemType: ItemType.Carrot, quantity: 1, cellPos);
+                    }
+                    if (cellInPlanting == tileBaseCorn[3])
+                    {
+                        this.GetComponent<CharacterActionController>().DoAnimation("Picking");
+                        soundButtonManager.PlaySFX(soundButtonManager.picking_up_plant);
+                        Harvest(itemType: ItemType.Corn, quantity: 1, cellPos);
+                    }
+                    if (cellInPlanting == tilebaseRice[3])
+                    {
+                        this.GetComponent<CharacterActionController>().DoAnimation("Picking");
+                        soundButtonManager.PlaySFX(soundButtonManager.picking_up_plant);
+                        Harvest(itemType: ItemType.Rice, quantity: 1, cellPos);
+                    }
+                    break;
 
-                    case FarmMode.PlantingRice:
-                        if (cellInGroundWatered == tileToPlace_groundWatered && allTileMap.tilemap_Planting.GetTile(cellPos) == null)
-                        {
-                            this.GetComponent<CharacterActionController>().DoAnimation("Planting");
-                            soundButtonManager.PlaySFX(soundButtonManager.planting);
-                            Plant(cellPos, ItemType.Rice, 0);
-                        }
-                        else
-                        {
-                            ShowNotification("Please plant the dug wattered bed", 2);
-                        }
-                        break;
-
-                    case FarmMode.Gloving:
-                        if (cellInPlanting == tilebaseCarrot[3])
-                        {
-                            this.GetComponent<CharacterActionController>().DoAnimation("Picking");
-                            soundButtonManager.PlaySFX(soundButtonManager.picking_up_plant);
-                            Harvest(itemType: ItemType.Carrot, quantity: 1, cellPos);
-                        }
-                        if (cellInPlanting == tileBaseCorn[3])
-                        {
-                            this.GetComponent<CharacterActionController>().DoAnimation("Picking");
-                            soundButtonManager.PlaySFX(soundButtonManager.picking_up_plant);
-                            Harvest(itemType: ItemType.Corn, quantity: 1, cellPos);
-                        }
-                        if (cellInPlanting == tilebaseRice[3])
-                        {
-                            this.GetComponent<CharacterActionController>().DoAnimation("Picking");
-                            soundButtonManager.PlaySFX(soundButtonManager.picking_up_plant);
-                            Harvest(itemType: ItemType.Rice, quantity: 1, cellPos);
-                        }
-                        break;
-
-                    default:
-                        break;
-                }
+                default:
+                    break;
             }
         }
     }
@@ -429,6 +418,11 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
     }
 
     public void OnReadDataAnimalCompleted(string data)
+    {
+        
+    }
+
+    public void OnReadDataAllUserCompleted(List<string> data)
     {
         
     }
