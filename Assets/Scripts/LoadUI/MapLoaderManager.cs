@@ -43,7 +43,17 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
         if (firebaseUser != null)
         {
             firebaseReadData.ReadData("Maps/" + firebaseUser.UserId, this, ReadDataType.Map);
-            FirebaseDatabase.DefaultInstance.GetReference("Maps/" + firebaseUser.UserId).ValueChanged += OnDataChanged;
+            //FirebaseDatabase.DefaultInstance.GetReference("Maps/" + firebaseUser.UserId).ValueChanged += OnDataChanged;
+        }
+
+        Debug.Log("PHAT TEST (MAPJSON): " + FriendItemCanvasManager.MapJsonWaitToLoad);
+        Debug.Log("PHAT TEST (isNEEDLOAD): " + FriendItemCanvasManager.isNeedToLoadVisitMap);
+
+        if (FriendItemCanvasManager.isNeedToLoadVisitMap)
+        {
+            FriendItemCanvasManager.isNeedToLoadVisitMap = false;
+            Debug.Log("PHAT TEST (MAPJSON): " + FriendItemCanvasManager.MapJsonWaitToLoad);
+            LoadMap(JsonConvert.DeserializeObject <Map>(FriendItemCanvasManager.MapJsonWaitToLoad));
         }
     }
 
@@ -188,12 +198,24 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
         }
     }
 
-    private void LoadMap(Map map)
+    public void LoadMap(Map map)
     {
         Debug.Log("MapLoaderManager - LoadMap: " + map.GetLength());
         for (int i = 0; i < map.GetLength(); i++)
         {
             CellDataToTiseBase(map.lstCell[i]);
+        }
+    }
+
+    public void ClearMap()
+    {
+        for (int x = tilemap_FarmGround.cellBounds.min.x; x < tilemap_FarmGround.cellBounds.max.x; x++)
+        {
+            for (int y = tilemap_FarmGround.cellBounds.min.y; y < tilemap_FarmGround.cellBounds.max.y; y++)
+            {
+                tilemap_FarmGround.SetTile(new Vector3Int(x, y), null);
+            }
+
         }
     }
 

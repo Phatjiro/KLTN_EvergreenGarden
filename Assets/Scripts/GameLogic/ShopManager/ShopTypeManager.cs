@@ -49,6 +49,8 @@ public class ShopTypeManager : MonoBehaviour
         crrItemType = ShopItemType.Seeds;
         shopTypeObject.SetActive(false);
         seedShopObject.SetActive(true);
+
+        CharacterActionController.isAllowToMove = false;
     }
 
     public void LoadToAnimalShop()
@@ -57,5 +59,7 @@ public class ShopTypeManager : MonoBehaviour
         crrItemType = ShopItemType.Animals;
         shopTypeObject.SetActive(false);
         animalShopObject.SetActive(true);
+
+        CharacterActionController.isAllowToMove = false;
     }
 }

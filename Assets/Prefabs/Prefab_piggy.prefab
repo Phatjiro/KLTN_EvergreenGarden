@@ -816,9 +816,11 @@ GameObject:
   - component: {fileID: -3059530098351175913}
   - component: {fileID: 488938525886576761}
   - component: {fileID: -8275522292918618160}
+  - component: {fileID: 3715134515690381143}
+  - component: {fileID: 2225529751288742657}
   m_Layer: 0
   m_Name: Prefab_piggy
-  m_TagString: Untagged
+  m_TagString: Animal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -951,6 +953,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 366d70b02d0ada5498aacd0b27d041e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!50 &3715134515690381143
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6438826963164116715}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 0
+--- !u!210 &2225529751288742657
+SortingGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6438826963164116715}
+  m_Enabled: 1
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 11
+  m_SortAtRoot: 0
 --- !u!1 &6987966265527684484
 GameObject:
   m_ObjectHideFlags: 0

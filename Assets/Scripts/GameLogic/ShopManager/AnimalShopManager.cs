@@ -54,5 +54,7 @@ public class AnimalShopManager : MonoBehaviour
         {
             cartObject.SetActive(false);
         }
+
+        CharacterActionController.isAllowToMove = true;
     }
 }

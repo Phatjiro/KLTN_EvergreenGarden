@@ -57,5 +57,7 @@ public class SeedShopManager : MonoBehaviour
         {
             cartObject.SetActive(false);
         }
+
+        CharacterActionController.isAllowToMove = true;
     }
 }

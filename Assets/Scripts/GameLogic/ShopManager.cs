@@ -71,12 +71,15 @@ public class ShopManager : MonoBehaviour
         if (shopObject.activeSelf != true && TestBag.IsShowing() != true && seedShopObject.activeSelf != true && animalShopObject.activeSelf != true)
         {
             wizardShop.SetActive(true);
+
+            CharacterActionController.isAllowToMove = false;
         }
     }
 
     public void ExitWizard()
     {
         wizardShop.SetActive(false);
+        CharacterActionController.isAllowToMove = true;
     }
 
     public void ActiveShop()
@@ -85,12 +88,16 @@ public class ShopManager : MonoBehaviour
         Debug.Log("Active shop");
         wizardShop.SetActive(false);
         shopObject.SetActive(true);
+
+        CharacterActionController.isAllowToMove = false;
     }
 
     public void ExitShop()
     {
         soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         shopObject.SetActive(false);
+
+        CharacterActionController.isAllowToMove = true;
     }
 
     public void ActiveSellBag()

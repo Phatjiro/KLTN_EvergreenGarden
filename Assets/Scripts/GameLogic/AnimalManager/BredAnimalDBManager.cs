@@ -7,6 +7,8 @@ using UnityEngine;
 
 public class BredAnimalDBManager : MonoBehaviour, ReadDataCallback
 {
+    public static bool isLoadedAnimal = false;
+
     public List<Animal> lstCurrentBredAnimal = new List<Animal>();
 
     public BredAnimalDBManager() { }
@@ -22,6 +24,11 @@ public class BredAnimalDBManager : MonoBehaviour, ReadDataCallback
     private void Awake()
     {
         loadDataDB();
+
+        if (FriendItemCanvasManager.isNeedToLoadVisitMap)
+        {
+            LoadAnimalByJson(FriendItemCanvasManager.AnimalJsonWaitToLoad);
+        }
     }
     private void Start()
     {
@@ -86,10 +93,16 @@ public class BredAnimalDBManager : MonoBehaviour, ReadDataCallback
 
     public void OnReadDataAnimalCompleted(string data)
     {
-        Debug.Log("start Read");
+        if (isLoadedAnimal) return;
+        isLoadedAnimal = true;
+        LoadAnimalByJson(data);
+    }
 
-        lstCurrentBredAnimal = JsonConvert.DeserializeObject<List<Animal>>(data);
-        Debug.Log("Convert Json to List Animal" + data);
+    public void LoadAnimalByJson(string json)
+    {
+        Debug.Log("start Read");
+        lstCurrentBredAnimal = JsonConvert.DeserializeObject<List<Animal>>(json);
+        Debug.Log("Convert Json to List Animal" + json);
         animalManager.LoadAnimal(lstCurrentBredAnimal);
     }
 

@@ -153,4 +153,24 @@ public class AnimalManager : MonoBehaviour
             }
         }
     }
+
+    private void Update()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(mousePosition, Vector2.zero);
+            foreach (var hit in hits)
+            {
+                if (hit.collider != null && hit.collider.gameObject != null)
+                {
+                    if (hit.collider.gameObject.tag == "Animal")
+                    {
+                        hit.collider.gameObject.GetComponent<ClickEventHandler>().ActiveCanvas();
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }

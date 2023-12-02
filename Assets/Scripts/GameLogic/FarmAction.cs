@@ -118,10 +118,10 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
 
     private void UpdateMapDataToFirebase()
     {
-        if (!MapLoaderManager.isLoadedMap)
+        if (!MapLoaderManager.isLoadedMap || !FriendItemCanvasManager.isThisUser)
             return;
         Debug.Log("Update map");
-        firebaseWriteData.WriteData("Maps/" + userLoaderManager.userInGame.id, mapLoaderManager.userMap.ToString());
+        firebaseWriteData.WriteData("Maps/" + UserLoaderManager.userInGame.id, mapLoaderManager.userMap.ToString());
     }
 
     public void AddPlantTime(DateTime currentDateTime, ItemType itemType, Vector3Int cellPos, DateTime nextGrowTime)
@@ -391,7 +391,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
         ItemInBag item = new ItemInBag(itemType, quantity);
 
         // Add item to user bag
-        userLoaderManager.userInGame.AddItemToBagAndLoadUI(itemType, quantity);
+        UserLoaderManager.userInGame.AddItemToBagAndLoadUI(itemType, quantity);
         //userLoaderManager.userInGame.ShowBag();
         mapLoaderManager.userMap.SetState(cellPos, CellState.None);
     }

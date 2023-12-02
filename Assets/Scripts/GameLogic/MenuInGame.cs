@@ -50,6 +50,8 @@ public class MenuInGame : MonoBehaviour
     {
         soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         menuObject.SetActive(!menuObject.activeSelf);
+
+        CharacterActionController.isAllowToMove = false;
     }
 
     public void ExitMenuManager()
@@ -60,6 +62,7 @@ public class MenuInGame : MonoBehaviour
             settingsObject.SetActive(false);
         }
         menuObject.SetActive(false);
+        CharacterActionController.isAllowToMove = true;
     }
 
     public void ShowMenuScene()

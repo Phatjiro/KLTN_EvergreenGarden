@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -28,6 +29,8 @@ public class FriendListManager : MonoBehaviour, ReadDataCallback
 
     private static bool isShowing = false;
 
+    SoundButtonManager soundButtonManager;
+
     private void Awake()
     {
         firebaseUser = FirebaseAuth.DefaultInstance.CurrentUser;
@@ -40,16 +43,11 @@ public class FriendListManager : MonoBehaviour, ReadDataCallback
     void Start()
     {
         _instance = this;
+        soundButtonManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<SoundButtonManager>();
         if (firebaseUser != null)
         {
             firebaseReadData.ReadData("Users", this, ReadDataType.AllUser);
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     public static bool IsShowing()
@@ -69,12 +67,18 @@ public class FriendListManager : MonoBehaviour, ReadDataCallback
     {
         isShowing = true;
         this.GetComponent<RectTransform>().DOAnchorPosY(0, 0.5f);
+
+        CharacterActionController.isAllowToMove = false;
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
     }
+
 
     public void ExitFriendList()
     {
         isShowing = false;
         this.GetComponent<RectTransform>().DOAnchorPosY(-1000, 0.5f);
+        CharacterActionController.isAllowToMove = true;
+        soundButtonManager.PlaySFX(soundButtonManager.clickButton);
     }
 
     public void OnReadDataMapCompleted(string data)
@@ -94,11 +98,14 @@ public class FriendListManager : MonoBehaviour, ReadDataCallback
 
     public void OnReadDataAllUserCompleted(List<string> data)
     {
+#if !UNITY_EDITOR
         lstAllUser = new List<User>();
         for (int i = 0; i < data.Count; i++)
         {
             lstAllUser.Add(JsonConvert.DeserializeObject<User>(data[i]));
         }
+
+        lstAllUser = lstAllUser.OrderByDescending(user => user.gold).ToList();
 
         if (isLoadFirstTime)
         {
@@ -111,5 +118,6 @@ public class FriendListManager : MonoBehaviour, ReadDataCallback
                 loader.ReloadUI();
             }
         }
+#endif
     }
 }

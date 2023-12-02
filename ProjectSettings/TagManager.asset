@@ -12,6 +12,11 @@ TagManager:
   - Carrot4
   - AnimalInfo
   - Barrier
+  - Firebase
+  - LoadMap
+  - LoadAnimal
+  - Animal
+  - BackGarden
   layers:
   - Default
   - TransparentFX

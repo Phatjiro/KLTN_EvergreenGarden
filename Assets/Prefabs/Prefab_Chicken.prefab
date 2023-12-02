@@ -96,6 +96,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Prefab_Chicken
       objectReference: {fileID: 0}
+    - target: {fileID: -8653719598885068355, guid: c78bc1f05d15879449c2f2a7fb7657bd, type: 3}
+      propertyPath: m_TagString
+      value: Animal
+      objectReference: {fileID: 0}
     - target: {fileID: -8172261211446949467, guid: c78bc1f05d15879449c2f2a7fb7657bd, type: 3}
       propertyPath: m_LocalScale.x
       value: -1
@@ -253,6 +257,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: c78bc1f05d15879449c2f2a7fb7657bd, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7266719892674663249}
+    - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: c78bc1f05d15879449c2f2a7fb7657bd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8597048080919144830}
   m_SourcePrefab: {fileID: 4843985084834002234, guid: c78bc1f05d15879449c2f2a7fb7657bd, type: 3}
 --- !u!1 &933228465372680866 stripped
 GameObject:
@@ -269,7 +276,7 @@ SortingGroup:
   m_Enabled: 1
   m_SortingLayerID: 1471039481
   m_SortingLayer: 1
-  m_SortingOrder: 0
+  m_SortingOrder: 11
   m_SortAtRoot: 0
 --- !u!95 &8322254542490707685
 Animator:
@@ -382,6 +389,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 366d70b02d0ada5498aacd0b27d041e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!50 &8597048080919144830
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 933228465372680866}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 1
+  m_Constraints: 0
 --- !u!4 &2034333510102747841 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -7552582706839291426, guid: c78bc1f05d15879449c2f2a7fb7657bd, type: 3}

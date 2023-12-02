@@ -25,7 +25,7 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
     [SerializeField]
     FirebaseWriteData firebaseWriteData;
 
-    public User userInGame;
+    public static User userInGame;
 
     [SerializeField]
     GameObject wizardCharacterName;
@@ -80,8 +80,8 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
         if (isLoadFirstTime)
         {
             isLoadFirstTime = false;
-            textCharacterNameInFriendList.text = "YOUR NAME: " + userInGame.characterName.ToString();
-            textUIDInFriendList.text = "YOUR UID: " + userInGame.id.ToString();
+            textCharacterNameInFriendList.text = "Your name: " + userInGame.characterName.ToString();
+            textUIDInFriendList.text = "Your uid: " + userInGame.id.ToString();
             BagItemLoader loader = BagItemLoader.instance;
             if (loader != null)
             {
@@ -113,7 +113,7 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
 
     public void SetDisplayName(string name)
     {
-        this.userInGame.characterName = name;
+        userInGame.characterName = name;
         textMeshProCharacterName.text = name;
         firebaseWriteData.WriteData("Users/" + userInGame.id, userInGame.ToString());
 	}

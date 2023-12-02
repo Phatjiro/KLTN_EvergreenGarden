@@ -22,12 +22,17 @@ public class CharacterActionController : MonoBehaviour
     void Start()
     {
         m_CurrentLookDirection = Vector2.zero;
+        CharacterActionController.isAllowToMove = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!isAllowToMove) return;
+        if (!isAllowToMove)
+        {
+            targetPosition = transform.position;
+            return;
+        }
 
         // Don't move if more 2 touch in screen (it maybe the user zoom in or out)
         if (Input.touchCount >= 2) return;

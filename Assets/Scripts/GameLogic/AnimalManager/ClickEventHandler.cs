@@ -17,22 +17,13 @@ public class ClickEventHandler : MonoBehaviour
         
     }
 
-    private void OnMouseDown()
+    public void ActiveCanvas()
     {
-        if (animalInfor.gameObject.activeSelf)
-        {
-            // Nếu đã hiển thị, ẩn UI Canvas
-            animalInfor.gameObject.SetActive(false);
-        }
-        else
-        {
-            // Nếu chưa hiển thị, hiển thị UI Canvas
-            Animal infor = this.GetComponent<AnimalLivingInformation>().information;
+        Debug.Log("Show animal infor");
+        Animal infor = this.GetComponent<AnimalLivingInformation>().information;
 
-            animalInfor.gameObject.SetActive(true);
-            animalInfor.loadAnimalInfor(infor, this.gameObject);
-        }
-
+        animalInfor.gameObject.SetActive(true);
+        animalInfor.loadAnimalInfor(infor, this.gameObject);
     }
 
 

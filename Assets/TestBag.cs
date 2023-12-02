@@ -46,6 +46,8 @@ public class TestBag : MonoBehaviour
         isShowing = true;
         TestBag.isAllowToSell = isAllowToSell;
         this.GetComponent<RectTransform>().DOAnchorPosY(0, 0.5f);
+
+        CharacterActionController.isAllowToMove = false;
     }
 
     public void CloseBag()
@@ -53,6 +55,8 @@ public class TestBag : MonoBehaviour
         soundButtonManager.PlaySFX(soundButtonManager.clickButton);
         isShowing = false;
         this.GetComponent<RectTransform>().DOAnchorPosY(1000, 0.5f);
+
+        CharacterActionController.isAllowToMove = true;
     }
 
     public void TurnOffAllowSell()

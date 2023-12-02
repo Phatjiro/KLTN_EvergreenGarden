@@ -1,8 +1,5 @@
-using PimDeWitte.UnityMainThreadDispatcher;
 using PolyAndCode.UI;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class BagItemLoader : MonoBehaviour, IRecyclableScrollRectDataSource

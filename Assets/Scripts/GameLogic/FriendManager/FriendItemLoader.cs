@@ -1,6 +1,7 @@
 using PolyAndCode.UI;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class FriendItemLoader : MonoBehaviour, IRecyclableScrollRectDataSource
@@ -37,6 +38,11 @@ public class FriendItemLoader : MonoBehaviour, IRecyclableScrollRectDataSource
     {
         //Casting to the implemented Cell
         var item = cell as FriendItemCanvasManager;
+        if (this.lstFriend == null)
+        {
+            Debug.Log("LstFriend null");
+            return;
+        }
         item.ConfigureCell(this.lstFriend[index], index);
     }
 
@@ -44,11 +50,25 @@ public class FriendItemLoader : MonoBehaviour, IRecyclableScrollRectDataSource
     void Start()
     {
         Instance = this;
+
+#if UNITY_EDITOR
+        List<User> lst = new List<User>();
+        //Demo list
+        for (int i = 0; i < 50; i++)
+        {
+            User user = new User();
+            user.characterName = "User_" + i;
+            user.id = ""+i;
+            lst.Add(user);
+        }
+        SetLstItem(lst);
+        ReloadUI();
+#endif
     }
 
     private void OnEnable()
     {
-        ReloadUI();        
+        //ReloadUI();        
     }
 
     public void SetLstItem(List<User> lst)
@@ -56,9 +76,4 @@ public class FriendItemLoader : MonoBehaviour, IRecyclableScrollRectDataSource
         this.lstFriend = lst;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

@@ -5,6 +5,9 @@ using UnityEngine.UI;
 public class CartManager : MonoBehaviour
 {
     [SerializeField]
+    bool isTestMode = false;
+
+    [SerializeField]
     Image imageItem;
 
     [SerializeField]
@@ -89,15 +92,24 @@ public class CartManager : MonoBehaviour
                 break;
 
             case ItemType.Chicken:
-                SetUpItemCart(spriteChicken, currentQuantity, 50);
+                int price = 50;
+                if (isTestMode)
+                    price = 0;
+                SetUpItemCart(spriteChicken, currentQuantity, price);
                 break;
 
             case ItemType.Pig:
-                SetUpItemCart(spritePig, currentQuantity, 100);
+                price = 100;
+                if (isTestMode)
+                    price = 0;
+                SetUpItemCart(spritePig, currentQuantity, price);
                 break;
 
             case ItemType.Cow:
-                SetUpItemCart(spriteCow, currentQuantity, 150);
+                price = 150;
+                if (isTestMode)
+                    price = 0;
+                SetUpItemCart(spriteCow, currentQuantity, price);
                 break;
 
             default:
@@ -142,14 +154,14 @@ public class CartManager : MonoBehaviour
         Debug.Log(shopItemType);
         Debug.Log(itemChoose);
         // Check user money
-        if (userLoaderManager.userInGame.gold < int.Parse(textTotal.text))
+        if (UserLoaderManager.userInGame.gold < int.Parse(textTotal.text))
         {
             soundButtonManager.PlaySFX(soundButtonManager.failed);
             NotificationManager.instance.ShowNotification("You don't have engough money to buy item", 3);
         }
         else
         {
-            if (userLoaderManager.userInGame.gold < int.Parse(textTotal.text))
+            if (UserLoaderManager.userInGame.gold < int.Parse(textTotal.text))
             {
                 soundButtonManager.PlaySFX(soundButtonManager.failed);
                 NotificationManager.instance.ShowNotification("You don't have engough money to buy item", 3);
@@ -161,9 +173,9 @@ public class CartManager : MonoBehaviour
                 {
                     case ShopItemType.Seeds:
                         Debug.Log($"Add {itemChoose} : {currentQuantity}");
-                        userLoaderManager.userInGame.AddItemToBagAndLoadUI(itemChoose, currentQuantity);
-                        userLoaderManager.userInGame.gold -= int.Parse(textTotal.text);
-                        firebaseWriteData.WriteData("Users/" + userLoaderManager.userInGame.id, userLoaderManager.userInGame.ToString());
+                        UserLoaderManager.userInGame.AddItemToBagAndLoadUI(itemChoose, currentQuantity);
+                        UserLoaderManager.userInGame.gold -= int.Parse(textTotal.text);
+                        firebaseWriteData.WriteData("Users/" + UserLoaderManager.userInGame.id, UserLoaderManager.userInGame.ToString());
                         break;
 
                     case ShopItemType.Animals:
@@ -174,24 +186,24 @@ public class CartManager : MonoBehaviour
                                 {
                                     animalManager.InstanceNewChicken();
                                 }
-                                userLoaderManager.userInGame.gold -= int.Parse(textTotal.text);
-                                firebaseWriteData.WriteData("Users/" + userLoaderManager.userInGame.id, userLoaderManager.userInGame.ToString());
+                                UserLoaderManager.userInGame.gold -= int.Parse(textTotal.text);
+                                firebaseWriteData.WriteData("Users/" + UserLoaderManager.userInGame.id, UserLoaderManager.userInGame.ToString());
                                 break;
                             case ItemType.Pig:
                                 for (int i = 0; i < currentQuantity; i++)
                                 {
                                     animalManager.InstanceNewPiggy();
                                 }
-                                userLoaderManager.userInGame.gold -= int.Parse(textTotal.text);
-                                firebaseWriteData.WriteData("Users/" + userLoaderManager.userInGame.id, userLoaderManager.userInGame.ToString());
+                                UserLoaderManager.userInGame.gold -= int.Parse(textTotal.text);
+                                firebaseWriteData.WriteData("Users/" + UserLoaderManager.userInGame.id, UserLoaderManager.userInGame.ToString());
                                 break;
                             case ItemType.Cow:
                                 for (int i = 0; i < currentQuantity; i++)
                                 {
                                     animalManager.InstanceNewCow();
                                 }
-                                userLoaderManager.userInGame.gold -= int.Parse(textTotal.text);
-                                firebaseWriteData.WriteData("Users/" + userLoaderManager.userInGame.id, userLoaderManager.userInGame.ToString());
+                                UserLoaderManager.userInGame.gold -= int.Parse(textTotal.text);
+                                firebaseWriteData.WriteData("Users/" + UserLoaderManager.userInGame.id, UserLoaderManager.userInGame.ToString());
                                 break;
                             default:
                                 break;

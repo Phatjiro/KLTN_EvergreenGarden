@@ -110,11 +110,11 @@ public class SellBoardManager : MonoBehaviour
 
     public void PlusItem()
     {
-        for (int i = 0; i < userLoaderManager.userInGame.userBag.GetLength(); i++)
+        for (int i = 0; i < UserLoaderManager.userInGame.userBag.GetLength(); i++)
         {
-            if (userLoaderManager.userInGame.userBag.lstItem[i].type == itemChoose)
+            if (UserLoaderManager.userInGame.userBag.lstItem[i].type == itemChoose)
             {
-                if (currentQuantity < userLoaderManager.userInGame.userBag.lstItem[i].quantity)
+                if (currentQuantity < UserLoaderManager.userInGame.userBag.lstItem[i].quantity)
                 {
                     soundButtonManager.PlaySFX(soundButtonManager.clickButton);
                     currentQuantity += 1;
@@ -134,10 +134,10 @@ public class SellBoardManager : MonoBehaviour
     {
         soundButtonManager.PlaySFX(soundButtonManager.success);
         Debug.Log("SubmitItem");
-        userLoaderManager.userInGame.SellItemAndLoadUI(itemChoose, currentQuantity);
+        UserLoaderManager.userInGame.SellItemAndLoadUI(itemChoose, currentQuantity);
         
-        userLoaderManager.userInGame.gold += int.Parse(textTotal.text);
-        firebaseWriteData.WriteData("Users/" + userLoaderManager.userInGame.id, userLoaderManager.userInGame.ToString());
+        UserLoaderManager.userInGame.gold += int.Parse(textTotal.text);
+        firebaseWriteData.WriteData("Users/" + UserLoaderManager.userInGame.id, UserLoaderManager.userInGame.ToString());
         gameObject.SetActive(false);
     }
 
@@ -145,17 +145,17 @@ public class SellBoardManager : MonoBehaviour
     {
         soundButtonManager.PlaySFX(soundButtonManager.success);
         int quantityOfChooseItem = 0;
-        for (int i = 0; i < userLoaderManager.userInGame.userBag.GetLength(); i++)
+        for (int i = 0; i < UserLoaderManager.userInGame.userBag.GetLength(); i++)
         {
-            if (userLoaderManager.userInGame.userBag.lstItem[i].type == itemChoose)
+            if (UserLoaderManager.userInGame.userBag.lstItem[i].type == itemChoose)
             {
-                quantityOfChooseItem = userLoaderManager.userInGame.userBag.lstItem[i].quantity;
-                userLoaderManager.userInGame.SellItemAndLoadUI(itemChoose, quantityOfChooseItem);
+                quantityOfChooseItem = UserLoaderManager.userInGame.userBag.lstItem[i].quantity;
+                UserLoaderManager.userInGame.SellItemAndLoadUI(itemChoose, quantityOfChooseItem);
                 break;
             }
         }
-        userLoaderManager.userInGame.gold += (int.Parse(textPrice.text) * quantityOfChooseItem);
-        firebaseWriteData.WriteData("Users/" + userLoaderManager.userInGame.id, userLoaderManager.userInGame.ToString());
+        UserLoaderManager.userInGame.gold += (int.Parse(textPrice.text) * quantityOfChooseItem);
+        firebaseWriteData.WriteData("Users/" + UserLoaderManager.userInGame.id, UserLoaderManager.userInGame.ToString());
         gameObject.SetActive(false);
     }
 }

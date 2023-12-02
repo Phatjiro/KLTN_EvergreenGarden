@@ -62,7 +62,7 @@ public class AnimalInforManager : MonoBehaviour
 
     private void SkipAnimal()
     {
-        if (userLoaderManager.userInGame.diamond <= 0)
+        if (UserLoaderManager.userInGame.diamond <= 0)
         {
             soundButtonManager.PlaySFX(soundButtonManager.failed);
             NotificationManager.instance.ShowNotification("You don't have enoungh skiping fee", 3);
@@ -70,8 +70,8 @@ public class AnimalInforManager : MonoBehaviour
         else
         {
             soundButtonManager.PlaySFX(soundButtonManager.success);
-            userLoaderManager.userInGame.diamond -= 1;
-            firebaseWriteData.WriteData("Users/" + userLoaderManager.userInGame.id, userLoaderManager.userInGame.ToString());
+            UserLoaderManager.userInGame.diamond -= 1;
+            firebaseWriteData.WriteData("Users/" + UserLoaderManager.userInGame.id, UserLoaderManager.userInGame.ToString());
             crrAnimal.timeGrowsUp = 1;
             loading.LoadingInTime(2);
             btnSkip.interactable = false;
@@ -85,10 +85,10 @@ public class AnimalInforManager : MonoBehaviour
         {
             case "Chicken":
                 {
-                    if (userLoaderManager.userInGame.userBag.GetQuantityOfType(ItemType.Rice) >= 10)
+                    if (UserLoaderManager.userInGame.userBag.GetQuantityOfType(ItemType.Rice) >= 10)
                     {
-                        userLoaderManager.userInGame.SellItemAndLoadUI(ItemType.Rice, 10);
-                        firebaseWriteData.WriteData("Users/" + userLoaderManager.userInGame.id, userLoaderManager.userInGame.ToString());
+                        UserLoaderManager.userInGame.SellItemAndLoadUI(ItemType.Rice, 10);
+                        firebaseWriteData.WriteData("Users/" + UserLoaderManager.userInGame.id, UserLoaderManager.userInGame.ToString());
                         crrAnimal.timeGrowsUp /= 2;
                         btnFeed.interactable = false;
                         soundButtonManager.PlaySFX(soundButtonManager.success);
@@ -102,10 +102,10 @@ public class AnimalInforManager : MonoBehaviour
                 }
             case "Piggy":
                 {
-                    if (userLoaderManager.userInGame.userBag.GetQuantityOfType(ItemType.Carrot) >= 10)
+                    if (UserLoaderManager.userInGame.userBag.GetQuantityOfType(ItemType.Carrot) >= 10)
                     {
-                        userLoaderManager.userInGame.SellItemAndLoadUI(ItemType.Carrot, 10);
-                        firebaseWriteData.WriteData("Users/" + userLoaderManager.userInGame.id, userLoaderManager.userInGame.ToString());
+                        UserLoaderManager.userInGame.SellItemAndLoadUI(ItemType.Carrot, 10);
+                        firebaseWriteData.WriteData("Users/" + UserLoaderManager.userInGame.id, UserLoaderManager.userInGame.ToString());
                         crrAnimal.timeGrowsUp /= 2;
                         btnFeed.interactable = false;
                         soundButtonManager.PlaySFX(soundButtonManager.success);
@@ -120,10 +120,10 @@ public class AnimalInforManager : MonoBehaviour
                 }
             case "Cow":
                 {
-                    if (userLoaderManager.userInGame.userBag.GetQuantityOfType(ItemType.Corn) >= 10)
+                    if (UserLoaderManager.userInGame.userBag.GetQuantityOfType(ItemType.Corn) >= 10)
                     {
-                        userLoaderManager.userInGame.SellItemAndLoadUI(ItemType.Corn, 10);
-                        firebaseWriteData.WriteData("Users/" + userLoaderManager.userInGame.id, userLoaderManager.userInGame.ToString());
+                        UserLoaderManager.userInGame.SellItemAndLoadUI(ItemType.Corn, 10);
+                        firebaseWriteData.WriteData("Users/" + UserLoaderManager.userInGame.id, UserLoaderManager.userInGame.ToString());
                         crrAnimal.timeGrowsUp /= 2;
                         btnFeed.interactable = false;
                         soundButtonManager.PlaySFX(soundButtonManager.success);
@@ -145,13 +145,13 @@ public class AnimalInforManager : MonoBehaviour
     {
         soundButtonManager.PlaySFX(soundButtonManager.success);
 
-        userLoaderManager.userInGame.gold += crrAnimal.sellPrice;
+        UserLoaderManager.userInGame.gold += crrAnimal.sellPrice;
         
         bredAnimalDBManager.RemoveAnimal(crrAnimal);
         
-        firebaseWriteData.WriteData("Users/" + userLoaderManager.userInGame.id, userLoaderManager.userInGame.ToString());
+        firebaseWriteData.WriteData("Users/" + UserLoaderManager.userInGame.id, UserLoaderManager.userInGame.ToString());
         
-        firebaseWriteData.WriteData("Animals/" + userLoaderManager.userInGame.id, JsonConvert.SerializeObject(bredAnimalDBManager.lstCurrentBredAnimal));
+        firebaseWriteData.WriteData("Animals/" + UserLoaderManager.userInGame.id, JsonConvert.SerializeObject(bredAnimalDBManager.lstCurrentBredAnimal));
       
         Destroy(crrAnimalGO);
 
@@ -177,6 +177,13 @@ public class AnimalInforManager : MonoBehaviour
         btnSell.interactable = false;
         btnFeed.interactable = true;
         btnSkip.interactable = true;
+
+        CharacterActionController.isAllowToMove = true;
+    }
+
+    private void OnEnable()
+    {
+        CharacterActionController.isAllowToMove = false;
     }
 
     // Update is called once per frame
@@ -209,6 +216,7 @@ public class AnimalInforManager : MonoBehaviour
         loading.SetPercent(crrPercent);
         isLoading = true;
 
+        Debug.Log("Load animal information: " + animal.name);
         switch (animal.name) 
         {
             case "Chicken":
