@@ -132,8 +132,9 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
                     //Carrot1
                     farmAction.Plant(cellPos, ItemType.Carrot, 0, false, false);
                 }
+                //TODO
                 if (isNeedAddPlantTime)
-                    farmAction.AddPlantTime(platnedTime, ItemType.Carrot, cellPos, DateTime.Now.AddSeconds(20));
+                    farmAction.AddPlantTime(platnedTime, ItemType.Carrot, cellPos, DateTime.Now.AddSeconds(ItemInformationManager.cycleCarrot));
                 break;
             case CellState.Corn:
                 Debug.Log("Set state Corn");
@@ -162,7 +163,7 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
                     farmAction.Plant(cellPos, ItemType.Corn, 0, false, false);
                 }
                 if (isNeedAddPlantTime)
-                    farmAction.AddPlantTime(platnedTime, ItemType.Corn, cellPos, DateTime.Now.AddSeconds(20));
+                    farmAction.AddPlantTime(platnedTime, ItemType.Corn, cellPos, DateTime.Now.AddSeconds(ItemInformationManager.cycleCorn));
                 break;
             case CellState.Rice:
                 Debug.Log("Set state Rice");
@@ -191,7 +192,7 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
                     farmAction.Plant(cellPos, ItemType.Rice, 0, false, false);
                 }
                 if (isNeedAddPlantTime)
-                    farmAction.AddPlantTime(platnedTime, ItemType.Rice, cellPos, DateTime.Now.AddSeconds(20));
+                    farmAction.AddPlantTime(platnedTime, ItemType.Rice, cellPos, DateTime.Now.AddSeconds(ItemInformationManager.cycleRice));
                 break;
             default:
                 break;

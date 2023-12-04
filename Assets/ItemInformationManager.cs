@@ -4,6 +4,12 @@ public class ItemInformationManager: MonoBehaviour
 {
     public static ItemInformationManager _instance;
 
+    public static float cycleCarrot = 50;
+
+    public static float cycleRice = 20;
+
+    public static float cycleCorn = 80;
+
     [SerializeField]
     Sprite carrotIcon;
     [SerializeField]

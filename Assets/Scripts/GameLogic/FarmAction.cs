@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor.Search;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
@@ -97,6 +98,8 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
     [SerializeField]
     MapLoaderManager mapLoaderManager;
 
+    static bool isAllowToDigging = true;
+
     public static FarmMode currentMode = FarmMode.None;
 
     SoundButtonManager soundButtonManager;
@@ -190,11 +193,36 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                     Debug.Log("crr: " + crrTileBase.name);
                     TileBase nextTielBase = GetNextPlantTileBase(crrTileBase, itemType);
                     allTileMap.tilemap_Planting.SetTile(plantPos, nextTielBase);
-                    t.nextGrowTime = DateTime.Now.AddSeconds(20);
-                    if (GetNextPlantTileBase(nextTielBase, itemType) == null)
+
+                    //TODO
+                    //switch case
+                    switch (itemType)
                     {
-                        lstIndexRemove.Insert(0, index);
+                        case ItemType.Carrot:
+                            t.nextGrowTime = DateTime.Now.AddSeconds(ItemInformationManager.cycleCarrot);
+                            if (GetNextPlantTileBase(nextTielBase, itemType) == null)
+                            {
+                                lstIndexRemove.Insert(0, index);
+                            }
+                            break;
+                        case ItemType.Corn:
+                            t.nextGrowTime = DateTime.Now.AddSeconds(ItemInformationManager.cycleCorn);
+                            if (GetNextPlantTileBase(nextTielBase, itemType) == null)
+                            {
+                                lstIndexRemove.Insert(0, index);
+                            }
+                            break;
+                        case ItemType.Rice:
+                            t.nextGrowTime = DateTime.Now.AddSeconds(ItemInformationManager.cycleRice);
+                            if (GetNextPlantTileBase(nextTielBase, itemType) == null)
+                            {
+                                lstIndexRemove.Insert(0, index);
+                            }
+                            break;
+                        default:
+                            break;
                     }
+
                 }
                 index++;
             }
@@ -203,6 +231,11 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                 this.lstPlantedTime.RemoveAt(id);
             }
         }
+    }
+
+    private void AllowDigging()
+    {
+        isAllowToDigging = true;
     }
 
     // Update is called once per frame
@@ -235,16 +268,26 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                     break;
 
                 case FarmMode.Digging:
-                    if (allTileMap.tilemap_Farmable.GetTile(cellPos) != null)
+                    if (EnergyManager.energy > 0 && isAllowToDigging)
                     {
-                        this.GetComponent<CharacterActionController>().DoAnimation("Picking");
-                        soundButtonManager.PlaySFX(soundButtonManager.digging);
-                        DiggingGround(cellPos);
-                    }
-                    else
+                        if (allTileMap.tilemap_Farmable.GetTile(cellPos) != null)
+                        {
+                            this.GetComponent<CharacterActionController>().DoAnimation("Picking");
+                            soundButtonManager.PlaySFX(soundButtonManager.digging);
+                            DiggingGround(cellPos);
+                            EnergyManager.subTractEnergy();
+                            isAllowToDigging = false;
+                            Invoke("AllowDigging", 0.5f);
+                        }
+                        else
+                        {
+                            ShowNotification("Please dig in the planting area", 3);
+                        }
+                    } else if (EnergyManager.energy <= 0)
                     {
-                        ShowNotification("Please dig in the planting area", 3);
+                        ShowNotification("Please wait energy regent", 3);
                     }
+                    
                     break;
                 case FarmMode.Watering:
                     if (allTileMap.tilemap_Farmable.GetTile(cellPos) == tileToPlace_groundDigged)
@@ -359,8 +402,9 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
             case ItemType.Carrot:
                 allTileMap.tilemap_Planting.SetTile(cellPos, tilebaseCarrot[state]);
                 Debug.Log("Set tile carrot: " + cellPos);
+                //TODO
                 if (isNeedAddPlantTime)
-                    AddPlantTime(DateTime.Now, ItemType.Carrot, cellPos, DateTime.Now.AddSeconds(10));
+                    AddPlantTime(DateTime.Now, ItemType.Carrot, cellPos, DateTime.Now.AddSeconds(ItemInformationManager.cycleCarrot));
                 if (isNeddAddUserMap)
                     mapLoaderManager.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Carrot));
                 break;
@@ -368,7 +412,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                 allTileMap.tilemap_Planting.SetTile(cellPos, tileBaseCorn[state]);
                 Debug.Log("Set tile Corn: " + cellPos);
                 if (isNeedAddPlantTime)
-                    AddPlantTime(DateTime.Now, ItemType.Corn, cellPos, DateTime.Now.AddSeconds(10));
+                    AddPlantTime(DateTime.Now, ItemType.Corn, cellPos, DateTime.Now.AddSeconds(ItemInformationManager.cycleCorn));
                 if (isNeddAddUserMap)
                     mapLoaderManager.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Corn));
                 break;
@@ -376,7 +420,7 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
                 allTileMap.tilemap_Planting.SetTile(cellPos, tilebaseRice[state]);
                 Debug.Log("Set tile rice: " + cellPos);
                 if (isNeedAddPlantTime)
-                    AddPlantTime(DateTime.Now, ItemType.Rice, cellPos, DateTime.Now.AddSeconds(10));
+                    AddPlantTime(DateTime.Now, ItemType.Rice, cellPos, DateTime.Now.AddSeconds(ItemInformationManager.cycleRice));
                 if (isNeddAddUserMap)
                     mapLoaderManager.userMap.AddCell(new CellData(cellPos.x, cellPos.y, CellState.Rice));
                 break;
