@@ -54,7 +54,12 @@ public class EnergyManager : MonoBehaviour
 
             float deltaTime = (float)DateTime.Now.Subtract(data.timeRegent).TotalSeconds;
             int addEnergry = Mathf.RoundToInt(deltaTime / recoverTime);
-            data.energry += addEnergry;
+            if (addEnergry >= 1)
+            {
+                data.energry += addEnergry;
+                data.energry = Mathf.Min(10, data.energry);
+                this.enabled = true;
+            }    
         }
         else
         {
