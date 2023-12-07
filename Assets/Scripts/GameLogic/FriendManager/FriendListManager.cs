@@ -120,4 +120,9 @@ public class FriendListManager : MonoBehaviour, ReadDataCallback
         }
 #endif
     }
+
+    public void OnReadDataChatCompleted(string data)
+    {
+        return;
+    }
 }

@@ -119,4 +119,9 @@ public class BredAnimalDBManager : MonoBehaviour, ReadDataCallback
     {
         
     }
+
+    public void OnReadDataChatCompleted(string data)
+    {
+        return;
+    }
 }

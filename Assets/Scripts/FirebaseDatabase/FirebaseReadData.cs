@@ -8,7 +8,8 @@ public enum ReadDataType
     Map,
     User,
     Animal,
-    AllUser
+    AllUser,
+    Chat
 }
 
 public class FirebaseReadData : MonoBehaviour
@@ -58,7 +59,11 @@ public class FirebaseReadData : MonoBehaviour
                                     allUsers.Add(user);
                                 }
                                 callback.OnReadDataAllUserCompleted(allUsers);
-                    break;
+                                break;
+                            case ReadDataType.Chat:
+                                callback.OnReadDataChatCompleted(json);
+                                break;
+
                             default:
                                 break;
                         }

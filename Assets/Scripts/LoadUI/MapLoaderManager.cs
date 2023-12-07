@@ -240,11 +240,16 @@ public class MapLoaderManager : MonoBehaviour, ReadDataCallback
 
     public void OnReadDataAnimalCompleted(string data)
     {
-       
+        return;
     }
 
     public void OnReadDataAllUserCompleted(List<string> data)
-    { 
-        
+    {
+        return;
+    }
+
+    public void OnReadDataChatCompleted(string data)
+    {
+        return;
     }
 }

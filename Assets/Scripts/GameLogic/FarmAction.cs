@@ -13,6 +13,7 @@ public interface ReadDataCallback
     public void OnReadDataAnimalCompleted(string data);
 
     public void OnReadDataAllUserCompleted(List<string> data);
+    public void OnReadDataChatCompleted(string data);
 }
 
 public enum FarmMode
@@ -468,5 +469,10 @@ public class FarmAction : MonoBehaviour, ReadDataCallback
     public void OnReadDataAllUserCompleted(List<string> data)
     {
         
+    }
+
+    public void OnReadDataChatCompleted(string data)
+    {
+        return;
     }
 }

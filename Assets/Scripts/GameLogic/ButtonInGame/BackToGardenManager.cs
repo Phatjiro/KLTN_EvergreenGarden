@@ -93,4 +93,9 @@ public class BackToGardenManager : MonoBehaviour, ReadDataCallback
     {
         return;
     }
+
+    public void OnReadDataChatCompleted(string data)
+    {
+        return;
+    }
 }

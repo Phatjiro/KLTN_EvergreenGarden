@@ -127,4 +127,8 @@ public class UserLoaderManager : MonoBehaviour, ReadDataCallback
     {
         
     }
+
+    public void OnReadDataChatCompleted(string data)
+    {
+    }
 }

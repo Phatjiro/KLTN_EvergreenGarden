@@ -210,4 +210,9 @@ public class FriendItemCanvasManager : MonoBehaviour, ICell, ReadDataCallback
     {
         return;
     }
+
+    public void OnReadDataChatCompleted(string data)
+    {
+        return;
+    }
 }
