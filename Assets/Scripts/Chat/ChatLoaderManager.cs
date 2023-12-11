@@ -1,4 +1,4 @@
-using Firebase.Auth;
+using DG.Tweening;
 using Firebase.Database;
 using Newtonsoft.Json;
 using PolyAndCode.UI;
@@ -16,6 +16,12 @@ public class ChatLoaderManager : MonoBehaviour, IRecyclableScrollRectDataSource,
     private int _dataLength;
 
     [SerializeField]
+    Button buttonMinimize;
+    [SerializeField]
+    GameObject worldChatChannelObject;
+    private bool isMinimize = true;
+
+    [SerializeField]
     InputField fieldChat;
     [SerializeField]
     Button buttonSubmit;
@@ -24,6 +30,8 @@ public class ChatLoaderManager : MonoBehaviour, IRecyclableScrollRectDataSource,
     FirebaseWriteData firebaseWriteData;
     [SerializeField]
     FirebaseReadData firebaseReadData;
+
+    bool isScrolling = false;
 
     private List<ChatItemInfo> lstItem = new List<ChatItemInfo>();
     public int GetItemCount()
@@ -36,7 +44,9 @@ public class ChatLoaderManager : MonoBehaviour, IRecyclableScrollRectDataSource,
     {
         _recyclableScrollRect.DataSource = this;
         _recyclableScrollRect.ReloadData();
+        _recyclableScrollRect.normalizedPosition = new Vector2(0, 0);
 
+        buttonMinimize.onClick.AddListener(MinimizeChatBox);
         buttonSubmit.onClick.AddListener(SendMessage);
     }
 
@@ -45,8 +55,8 @@ public class ChatLoaderManager : MonoBehaviour, IRecyclableScrollRectDataSource,
         firebaseReadData.ReadData("Chats/WorldChat", this, ReadDataType.Chat);
         FirebaseDatabase.DefaultInstance.GetReference("Chats/WorldChat").ValueChanged += OnDataChanged;
 
-        //List<ChatItemInfo> lstDemo = new List<ChatItemInfo> ();
-        //for (int i = 0; i< 50; i++)
+        //List<ChatItemInfo> lstDemo = new List<ChatItemInfo>();
+        //for (int i = 0; i < 50; i++)
         //{
         //    ChatItemInfo item = new ChatItemInfo();
         //    item.username = "User " + i;
@@ -75,6 +85,8 @@ public class ChatLoaderManager : MonoBehaviour, IRecyclableScrollRectDataSource,
         chatItemInfo.contain = fieldChat.text;
         lstItem.Add(chatItemInfo);
         firebaseWriteData.WriteData("Chats/WorldChat", JsonConvert.SerializeObject(lstItem));
+
+        fieldChat.text = "";
     }
 
     public void OnReadDataMapCompleted(string data)
@@ -112,5 +124,50 @@ public class ChatLoaderManager : MonoBehaviour, IRecyclableScrollRectDataSource,
             return;
         }
         firebaseReadData.ReadData("Chats/WorldChat", this, ReadDataType.Chat);
+        StartCoroutine(SrollToBottom());
+    }
+
+    public void AddNewChat(string mess)
+    {
+        ChatItemInfo chatItem = new ChatItemInfo();
+        chatItem.username = "test";
+        chatItem.contain = mess;
+
+        this.lstItem.Add(chatItem);
+        StartCoroutine(SrollToBottom());
+    }
+    IEnumerator SrollToBottom()
+    {
+        if (!isScrolling)
+        {
+            yield return new WaitForSeconds(1);
+            int n = lstItem.Count;
+            for (int i = 0; i < n; i++)
+            {
+                isScrolling = true;
+                _recyclableScrollRect.verticalNormalizedPosition = 0;
+                yield return new WaitForSeconds(0.01f);
+            }
+            isScrolling = false;
+        }
+        
+    }
+
+    public void MinimizeChatBox()
+    {
+        if (isMinimize)
+        {
+            isMinimize = false;
+            CharacterActionController.isAllowToMove = false;
+            worldChatChannelObject.GetComponent<RectTransform>().DOAnchorPosX(-540, 1);
+            worldChatChannelObject.GetComponent<RectTransform>().DOAnchorPosY(800, 1);
+        }
+        else
+        {
+            isMinimize = true;
+            CharacterActionController.isAllowToMove = true;
+            worldChatChannelObject.GetComponent<RectTransform>().DOAnchorPosX(420, 1);
+            worldChatChannelObject.GetComponent<RectTransform>().DOAnchorPosY(80, 1);
+        }
     }
 }
