@@ -5,6 +5,10 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Facebook.Unity;
+using System.Collections.Generic;
+using System.Linq;
+using System;
 
 public class LoginManager : MonoBehaviour
 {
@@ -14,6 +18,9 @@ public class LoginManager : MonoBehaviour
     // Sign in google
     [SerializeField]
     Button buttonLoginWithGoogle;
+    [SerializeField]
+    Button buttonLoginWithFacebook;
+    private bool isFirstLogin = false;
 
     // Sign in email password
     [SerializeField]
@@ -70,6 +77,7 @@ public class LoginManager : MonoBehaviour
         buttonForgotPassword.onClick.AddListener(ForgetPassword);
 
         buttonLoginWithGoogle.onClick.AddListener(SignInWithGoogle);
+        buttonLoginWithFacebook.onClick.AddListener(LoginWithFacebook);
 
         // Init GoogleSignInConfiguration
         GoogleSignInConfiguration configuration = new GoogleSignInConfiguration
@@ -80,6 +88,9 @@ public class LoginManager : MonoBehaviour
         };
 
         GoogleSignIn.Configuration = configuration;
+
+        // Init FB
+        
 
         // Check dependencies
         FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
@@ -153,15 +164,20 @@ public class LoginManager : MonoBehaviour
                 // Firebase sign in successful
                 FirebaseUser user = task.Result;
 
-                if (user.Metadata.CreationTimestamp == auth.CurrentUser.Metadata.LastSignInTimestamp)
+                Debug.Log("CreateTimestamp: " + user.Metadata.CreationTimestamp.ToString());
+                Debug.Log("LastSignInTimestamp: " + (user.Metadata.LastSignInTimestamp + 30).ToString());
+
+                if (user.Metadata.CreationTimestamp >= user.Metadata.LastSignInTimestamp && user.Metadata.CreationTimestamp <= user.Metadata.LastSignInTimestamp + 30)
                 {
-                    // Create new User in game when complete register
-                    Bag userBag = new Bag();
-                    Map userMap = new Map();
-                    User newUser = new User(user.UserId, "", 100, 50, userBag);
-                    firebaseWriteData.WriteData("Users/" + newUser.id, newUser.ToString());
-                    firebaseWriteData.WriteData("Maps/" + newUser.id, userMap.ToString());
-                    Debug.Log("User created successfully");
+                    {
+                        // Create new User in game when complete register
+                        Bag userBag = new Bag();
+                        Map userMap = new Map();
+                        User newUser = new User(user.UserId, "", 100, 50, userBag);
+                        firebaseWriteData.WriteData("Users/" + newUser.id, newUser.ToString());
+                        firebaseWriteData.WriteData("Maps/" + newUser.id, userMap.ToString());
+                        Debug.Log("User created successfully");
+                    }
                 }
 
                 Debug.Log("Firebase user sign in: " + user.DisplayName + " -> Load to MenuScene");
@@ -376,5 +392,74 @@ public class LoginManager : MonoBehaviour
                 textNotifyLoginEmailPassword.text = "Success! Please check your email to reset password.";
             }
         });
+    }
+
+    public void LoginWithFacebook()
+    {
+        // Check FB init
+        if (!FB.IsInitialized)
+        {
+            FB.Init(() =>
+            {
+                if (FB.IsInitialized)
+                {
+                    FB.LogInWithReadPermissions(new List<string>() { "public_profile", "email" }, OnFacebookLoginComplete);
+                }
+                else
+                {
+                    Debug.LogError("Failed to initialize Facebook SDK");
+                }
+            });
+        }
+        else
+        {
+            FB.LogInWithReadPermissions(new List<string>() { "public_profile", "email" }, OnFacebookLoginComplete);
+        }
+    }
+
+    private void OnFacebookLoginComplete(ILoginResult result)
+    {
+        if (FB.IsLoggedIn)
+        {
+            // Get in4 from Facebook user
+            AccessToken token = AccessToken.CurrentAccessToken;
+            string accessToken = token.TokenString;
+            string userId = token.UserId;
+
+            // Login firebase by facebook
+            Credential credential = FacebookAuthProvider.GetCredential(accessToken);
+            auth.SignInWithCredentialAsync(credential).ContinueWith(task =>
+            {
+                if (task.IsCanceled || task.IsFaulted)
+                {
+                    Debug.LogError("Failed to sign in with Facebook: " + task.Exception);
+                }
+                else if (task.IsCompleted)
+                {
+                    // Login by facebook success
+                    FirebaseUser user = task.Result;
+                    Debug.Log("Logged in with Facebook: " + user.DisplayName);
+
+                    isFirstLogin = result.AccessToken.Permissions.Contains("email");
+
+                    if (isFirstLogin)
+                    {
+                        // Create new User in game when complete register
+                        Bag userBag = new Bag();
+                        Map userMap = new Map();
+                        User newUser = new User(user.UserId, "", 100, 50, userBag);
+                        firebaseWriteData.WriteData("Users/" + newUser.id, newUser.ToString());
+                        firebaseWriteData.WriteData("Maps/" + newUser.id, userMap.ToString());
+                        Debug.Log("User created successfully");
+                    }
+
+                    SceneManager.LoadScene("MenuScene");
+                }
+            });
+        }
+        else
+        {
+            Debug.LogError("Failed to log in with Facebook");
+        }
     }
 }

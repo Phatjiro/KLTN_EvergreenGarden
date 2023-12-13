@@ -52,7 +52,7 @@ public class MenuManager : MonoBehaviour
             FirebaseAuth.DefaultInstance.SignOut();
 
             // Sign out from GoogleSignIn
-            GoogleSignIn.DefaultInstance.SignOut();
+            //GoogleSignIn.DefaultInstance.SignOut();
 
             // Back to LoginScene
             Debug.Log("Sign out successful! - Load to LoginScene");
