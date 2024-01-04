@@ -11,6 +11,7 @@ Final project for university graduation - Farm game built with Unity - Pro versi
 ## Video, Image demo + Link CH Play
 - Link video: https://www.youtube.com/watch?v=kV_mHByXnhg | https://www.youtube.com/watch?v=2aTGiB7V1fw
 - Link CH Play: Loading...
+
 | **STT** | **Scene** | **Demo** |
 | :------: | :------: | :------: |
 | 1 | MenuScene | <img alt="MenuScene" src="https://private-user-images.githubusercontent.com/89081979/294146520-e319e78b-8262-4d3e-8bb0-c7dbb3ac9e3d.jpg?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MDQzNjI4MzcsIm5iZiI6MTcwNDM2MjUzNywicGF0aCI6Ii84OTA4MTk3OS8yOTQxNDY1MjAtZTMxOWU3OGItODI2Mi00ZDNlLThiYjAtYzdkYmIzYWM5ZTNkLmpwZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDAxMDQlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwMTA0VDEwMDIxN1omWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTA5YzFlZTgyMmQ2MWI2ZjcyY2IxZjlmYTVhYTVjZDMxMTU0NmFjYmQ1YWQwM2I2OTlkYWY4ODNiY2UyZGM5YWQmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.Ux_bqohKKkDzQCG1zFB3ZSsW9Op5rakhnv3j0AB8a3c" width="600"> |
